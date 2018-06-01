@@ -13,7 +13,7 @@
 @protocol ImagePickerViewControllerDelegate<NSObject>
 
 ///选中回调
-- (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinished:(NSArray<PhotoItem *> *)photos;
+- (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinished:(NSArray<PhotoItem *> *)photos isSelectedOriginalImage:(BOOL)isSelectedOriginalImage;
 
 ///取消选择
 - (void)imagePickerViewControllerDidCanceled:(ImagePickerViewController *)imagePickerViewController;
@@ -31,7 +31,7 @@
 
 @property (nonatomic, weak) id<ImagePickerViewControllerDelegate> delegate;
 
-/// 默认为NO. 不允许选中原图。以后考虑做
+/// 默认为NO;
 @property (nonatomic, assign, getter=isAllowSelectedOriginalImage) BOOL allowSelectedOriginalImage;
 
 @end

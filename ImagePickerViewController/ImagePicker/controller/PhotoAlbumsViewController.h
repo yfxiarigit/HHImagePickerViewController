@@ -7,7 +7,8 @@
 //  相片专辑列表
 
 #import <UIKit/UIKit.h>
+#import "ImagePickerViewController.h"
 
 @interface PhotoAlbumsViewController : UIViewController
-
+@property (nonatomic, strong) ImagePickerViewController *imagePickerViewController;
 @end

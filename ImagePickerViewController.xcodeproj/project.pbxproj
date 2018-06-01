@@ -130,10 +130,10 @@
 			isa = PBXGroup;
 			children = (
 				C084AD9420C114EC00FE3C43 /* ImagePickerBottomBar.h */,
-				C084AD9620C114EC00FE3C43 /* PhotoAlbumCell.h */,
-				C084AD9720C114EC00FE3C43 /* PhotoCell.h */,
 				C084AD9C20C114EC00FE3C43 /* ImagePickerBottomBar.m */,
+				C084AD9720C114EC00FE3C43 /* PhotoCell.h */,
 				C084AD9F20C114EC00FE3C43 /* PhotoCell.m */,
+				C084AD9620C114EC00FE3C43 /* PhotoAlbumCell.h */,
 				C084ADA020C114EC00FE3C43 /* PhotoAlbumCell.m */,
 			);
 			path = view;
@@ -143,9 +143,9 @@
 			isa = PBXGroup;
 			children = (
 				C084AD9820C114EC00FE3C43 /* PhotoItem.h */,
-				C084AD9A20C114EC00FE3C43 /* PhotoAlbum.m */,
 				C084AD9E20C114EC00FE3C43 /* PhotoItem.m */,
 				C084ADA220C114EC00FE3C43 /* PhotoAlbum.h */,
+				C084AD9A20C114EC00FE3C43 /* PhotoAlbum.m */,
 			);
 			path = model;
 			sourceTree = "<group>";

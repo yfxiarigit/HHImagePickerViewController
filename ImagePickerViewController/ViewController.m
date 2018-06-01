@@ -52,7 +52,7 @@
 
 #pragma mark - imagePicker delegate
 
-- (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinished:(NSArray<PhotoItem *> *)photos {
+- (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinished:(NSArray<PhotoItem *> *)photos isSelectedOriginalImage:(BOOL)isSelectedOriginalImage {
     self.dataArray = nil;
     [self.dataArray addObjectsFromArray:photos];
     [self.collectionView reloadData];
@@ -70,6 +70,7 @@
     _imagePickerViewController = [[ImagePickerViewController alloc] init];
     _imagePickerViewController.delegate = self;
     _imagePickerViewController.photoAlbum = [PhotoHelper getTheAllPhotoAlbum];
+    vc.imagePickerViewController = _imagePickerViewController;
     if (self.dataArray.count) {
         _imagePickerViewController.selectedPhotoItems = self.dataArray;
     }

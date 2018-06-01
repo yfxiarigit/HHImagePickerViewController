@@ -7,7 +7,6 @@
 //
 
 #import "PhotoAlbumsViewController.h"
-#import "ImagePickerViewController.h"
 #import "PhotoAlbumCell.h"
 #import "PhotoHelper.h"
 
@@ -62,9 +61,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     PhotoAlbum *photoAlbum = [self.dataArray objectAtIndex:indexPath.row];
-    ImagePickerViewController *picker = [[ImagePickerViewController alloc] init];
-    picker.photoAlbum = photoAlbum;
-    [self.navigationController pushViewController:picker animated:YES];
+    self.imagePickerViewController.photoAlbum = photoAlbum;
+    [self.navigationController pushViewController:self.imagePickerViewController animated:YES];
 }
 
 #pragma mark - getter
@@ -78,6 +76,13 @@
         [_tableView registerClass:[PhotoAlbumCell class] forCellReuseIdentifier:@"photoCell"];
     }
     return _tableView;
+}
+
+- (ImagePickerViewController *)imagePickerViewController {
+    if (!_imagePickerViewController) {
+        _imagePickerViewController = [[ImagePickerViewController alloc] init];
+    }
+    return _imagePickerViewController;
 }
 
 @end

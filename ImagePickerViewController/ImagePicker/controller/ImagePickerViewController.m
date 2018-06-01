@@ -33,32 +33,6 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
     [self.view addSubview:self.collectionView];
     [self.view addSubview:self.bottomBar];
-    self.navigationItem.title = _photoAlbum.albumName;
-    [_photoAlbum getPhotoItemsResultHandler:^(NSArray<PhotoItem *> *imageArray) {
-        [self.dataArray removeAllObjects];
-        [self.dataArray addObjectsFromArray:imageArray];
-        [self.collectionView reloadData];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.selectedPhotoItems.count) {
-                NSMutableArray *arr = [NSMutableArray array];
-                for (PhotoItem *item in self.selectedPhotoItems) {
-                    [arr addObject:item.phAsset.localIdentifier];
-                }
-                [self.selectedPhotoItems removeAllObjects];
-                NSInteger index = 0;
-                for (PhotoItem *item in self.dataArray) {
-                    if ([arr containsObject:item.phAsset.localIdentifier]) {
-                        item.selected = YES;
-                        index = [self.dataArray indexOfObject:item];
-                        [self.selectedPhotoItems addObject:item];
-                    }
-                }
-                [self.collectionView reloadData];
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
-            }
-        });
-    }];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -104,8 +78,8 @@
 #pragma mark - bar delegate
 
 - (void)imagePickerBottomBarDidClickSureButton {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerViewController:didFinished:)]) {
-        [self.delegate imagePickerViewController:self didFinished:self.selectedPhotoItems];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerViewController:didFinished: isSelectedOriginalImage:)]) {
+        [self.delegate imagePickerViewController:self didFinished:self.selectedPhotoItems isSelectedOriginalImage:self.isAllowSelectedOriginalImage];
     }
 }
 
@@ -116,6 +90,37 @@
 }
 
 #pragma mark - getter
+
+- (void)setPhotoAlbum:(PhotoAlbum *)photoAlbum {
+    _photoAlbum = photoAlbum;
+    
+    self.navigationItem.title = _photoAlbum.albumName;
+    [_photoAlbum getPhotoItemsResultHandler:^(NSArray<PhotoItem *> *imageArray) {
+        [self.dataArray removeAllObjects];
+        [self.dataArray addObjectsFromArray:imageArray];
+        [self.collectionView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.selectedPhotoItems.count) {
+                NSMutableArray *arr = [NSMutableArray array];
+                for (PhotoItem *item in self.selectedPhotoItems) {
+                    [arr addObject:item.phAsset.localIdentifier];
+                }
+                [self.selectedPhotoItems removeAllObjects];
+                NSInteger index = 0;
+                for (PhotoItem *item in self.dataArray) {
+                    if ([arr containsObject:item.phAsset.localIdentifier]) {
+                        item.selected = YES;
+                        index = [self.dataArray indexOfObject:item];
+                        [self.selectedPhotoItems addObject:item];
+                    }
+                }
+                [self.collectionView reloadData];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+            }
+        });
+    }];
+}
 
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
