@@ -13,6 +13,8 @@
 @property (nonatomic, strong) UILabel *content;
 //选中时的遮罩
 @property (nonatomic, strong) UIButton *coverView;
+@property (nonatomic, strong) NSString *localIdentifier;
+@property (nonatomic, assign) int32_t imageRequestID;
 @end
 
 @implementation PhotoCell
@@ -31,9 +33,15 @@
     _photoItem = photoItem;
     self.coverView.selected = photoItem.selected;
     [self seletedPhoto:photoItem.selected];
-    [photoItem getThumbImageWithSize:CGSizeMake(self.bounds.size.width * [UIScreen mainScreen].scale, self.bounds.size.height * [UIScreen mainScreen].scale) resultHandler:^(UIImage *image, NSDictionary *info) {
-        _photoView.image = image;
+    self.photoView.image = nil;
+    self.localIdentifier = photoItem.phAsset.localIdentifier;
+    [[PHImageManager defaultManager] cancelImageRequest:self.imageRequestID];
+    int32_t imageRequestID = [photoItem getThumbImageWithSize:CGSizeMake(self.bounds.size.width, self.bounds.size.height) resultHandler:^(UIImage *image, NSDictionary *info) {
+        if ([photoItem.phAsset.localIdentifier isEqualToString:self.localIdentifier]) {
+            self.photoView.image = image;
+        }
     }];
+    self.imageRequestID = imageRequestID;
 }
 
 #pragma mark - event

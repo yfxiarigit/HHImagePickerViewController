@@ -21,7 +21,8 @@
 
 - (instancetype)init {
     self = [super init];
-    _maxSelectedPhotoCount = 1;
+    _maxAllowSelectedPhotoCount = 1;
+    _allowSelectedOriginalImage = NO;
     return self;
 }
 
@@ -29,33 +30,35 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    [self configCollectionView];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
+    [self.view addSubview:self.collectionView];
     [self.view addSubview:self.bottomBar];
     self.navigationItem.title = _photoAlbum.albumName;
     [_photoAlbum getPhotoItemsResultHandler:^(NSArray<PhotoItem *> *imageArray) {
         [self.dataArray removeAllObjects];
         [self.dataArray addObjectsFromArray:imageArray];
         [self.collectionView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.selectedPhotoItems.count) {
+                NSMutableArray *arr = [NSMutableArray array];
+                for (PhotoItem *item in self.selectedPhotoItems) {
+                    [arr addObject:item.phAsset.localIdentifier];
+                }
+                [self.selectedPhotoItems removeAllObjects];
+                NSInteger index = 0;
+                for (PhotoItem *item in self.dataArray) {
+                    if ([arr containsObject:item.phAsset.localIdentifier]) {
+                        item.selected = YES;
+                        index = [self.dataArray indexOfObject:item];
+                        [self.selectedPhotoItems addObject:item];
+                    }
+                }
+                [self.collectionView reloadData];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+            }
+        });
     }];
-}
-
-- (void)configCollectionView{
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
-    CGFloat cellWidth = floorf((self.view.bounds.size.width-6) / 4.0);
-    layout.itemSize = CGSizeMake(cellWidth, cellWidth);
-    layout.minimumLineSpacing = 2;
-    layout.minimumInteritemSpacing = 2;
-    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-    _collectionView.backgroundColor = [UIColor whiteColor];
-    _collectionView.delegate = self;
-    _collectionView.dataSource = self;
-    _collectionView.alwaysBounceVertical = YES;
-    self.collectionView.showsHorizontalScrollIndicator = NO;
-    if (@available(iOS 11.0, *)) {
-        self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }
-    [_collectionView registerClass:[PhotoCell class] forCellWithReuseIdentifier:@"PhotoCell"];
-    [self.view addSubview:_collectionView];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -101,25 +104,38 @@
 #pragma mark - bar delegate
 
 - (void)imagePickerBottomBarDidClickSureButton {
-    
-    NSMutableArray *arr = [NSMutableArray array];
-    for (PhotoItem *item in self.selectedPhotoItems) {
-         UIImage *image = [item getScaleImage];
-        [arr addObject:image];
-    }
-    
     if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerViewController:didFinished:)]) {
-        [self.delegate imagePickerViewController:self didFinished:arr];
+        [self.delegate imagePickerViewController:self didFinished:self.selectedPhotoItems];
     }
+}
+
+#pragma mark - event
+
+- (void)cancel {
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - getter
 
-- (void)setSelectedPhotoItems:(NSMutableArray<PhotoItem *> *)selectedPhotoItems {
-    while (selectedPhotoItems.count > self.maxSelectedPhotoCount) {
-        [selectedPhotoItems removeLastObject];
+- (UICollectionView *)collectionView {
+    if (!_collectionView) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        CGFloat cellWidth = floorf((self.view.bounds.size.width-6) / 4.0);
+        layout.itemSize = CGSizeMake(cellWidth, cellWidth);
+        layout.minimumLineSpacing = 2;
+        layout.minimumInteritemSpacing = 2;
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+        _collectionView.backgroundColor = [UIColor whiteColor];
+        _collectionView.delegate = self;
+        _collectionView.dataSource = self;
+        _collectionView.alwaysBounceVertical = YES;
+        self.collectionView.showsHorizontalScrollIndicator = NO;
+        if (@available(iOS 11.0, *)) {
+            self.collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+        [_collectionView registerClass:[PhotoCell class] forCellWithReuseIdentifier:@"PhotoCell"];
     }
-    _selectedPhotoItems = selectedPhotoItems;
+    return _collectionView;
 }
 
 - (NSMutableArray *)dataArray {

@@ -9,6 +9,11 @@
 #import "PhotoItem.h"
 #import "UIImage+PhotoEx.h"
 
+@interface PhotoItem()
+/// 最大缩略图
+@property (nonatomic, strong) UIImage *scalePhoto;
+@end
+
 @implementation PhotoItem
 
 
@@ -22,7 +27,7 @@
     return item;
 }
 
-- (void)getThumbImageWithSize:(CGSize)size resultHandler:(void (^)(UIImage *image, NSDictionary *info))resultHandler
+- (PHImageRequestID)getThumbImageWithSize:(CGSize)size resultHandler:(void (^)(UIImage *image, NSDictionary *info))resultHandler
 {
     if (CGSizeEqualToSize(size, CGSizeZero)) {
         CGFloat imageLength = 135.f;
@@ -32,7 +37,7 @@
     if (self.phAsset) {
         PHImageManager *imageManager = [PHImageManager defaultManager];
         
-        [imageManager requestImageForAsset:self.phAsset
+        PHImageRequestID imageRequestId = [imageManager requestImageForAsset:self.phAsset
                                 targetSize:size
                                contentMode:PHImageContentModeAspectFill
                                    options:nil
@@ -44,16 +49,22 @@
                                      }
                                  }
                              }];
+        
+        return imageRequestId;
     }
+    return -1;
 }
 
 
 - (UIImage *)getScaleImage
 {
+    if (self.scalePhoto) {
+        return _scalePhoto;
+    }
     __block UIImage *originImage = nil;
 
     if (!self.phAsset) {
-        return originImage;
+        return nil;
     }
 
     PHAsset *asset = self.phAsset;
@@ -76,7 +87,7 @@
             originImage.phImageFileURLKey = info[@"PHImageFileURLKey"];
         }
     }];
-    
+    self.scalePhoto = originImage;
     return originImage;
 }
 

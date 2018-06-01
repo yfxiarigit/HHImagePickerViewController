@@ -15,7 +15,7 @@
 @property (nonatomic, strong) PHAsset *phAsset;
 
 + (PhotoItem *)itemWithPHAsset:(PHAsset *)asset;
-- (void)getThumbImageWithSize:(CGSize)size resultHandler:(void (^)(UIImage *image, NSDictionary *info))resultHandler;
+- (PHImageRequestID)getThumbImageWithSize:(CGSize)size resultHandler:(void (^)(UIImage *image, NSDictionary *info))resultHandler;
 
 ///获得压缩原图, 尺寸最大1000.
 - (UIImage *)getScaleImage;

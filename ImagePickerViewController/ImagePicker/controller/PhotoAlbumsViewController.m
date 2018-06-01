@@ -21,7 +21,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = @"照片";
-    [self configTableView];
+    [self.view addSubview:self.tableView];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
 }
 
 - (NSMutableArray *)dataArray {
@@ -36,20 +37,12 @@
     return _dataArray;
 }
 
-- (void)configTableView {
-    
-    _tableView = [[UITableView alloc] init];
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    _tableView.tableFooterView = [UIView new];
-    [self.view addSubview:_tableView];
-    [_tableView registerClass:[PhotoAlbumCell class] forCellReuseIdentifier:@"photoCell"];
-}
-
 - (void)viewDidLayoutSubviews {
     _tableView.frame = self.view.bounds;
     [super viewDidLayoutSubviews];
 }
+
+#pragma mark - tableView delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.dataArray.count;
@@ -73,4 +66,18 @@
     picker.photoAlbum = photoAlbum;
     [self.navigationController pushViewController:picker animated:YES];
 }
+
+#pragma mark - getter
+
+- (UITableView *)tableView {
+    if (!_tableView) {
+        _tableView = [[UITableView alloc] init];
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.tableFooterView = [UIView new];
+        [_tableView registerClass:[PhotoAlbumCell class] forCellReuseIdentifier:@"photoCell"];
+    }
+    return _tableView;
+}
+
 @end

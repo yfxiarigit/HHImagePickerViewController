@@ -22,6 +22,7 @@
 		C084ADAB20C114EC00FE3C43 /* PhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C084AD9F20C114EC00FE3C43 /* PhotoCell.m */; };
 		C084ADAC20C114EC00FE3C43 /* PhotoAlbumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C084ADA020C114EC00FE3C43 /* PhotoAlbumCell.m */; };
 		C084ADAD20C114EC00FE3C43 /* UIImage+PhotoEx.m in Sources */ = {isa = PBXBuildFile; fileRef = C084ADA320C114EC00FE3C43 /* UIImage+PhotoEx.m */; };
+		C084ADB420C11C7000FE3C43 /* SelectedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C084ADB320C11C7000FE3C43 /* SelectedCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,8 @@
 		C084ADA120C114EC00FE3C43 /* PhotoAlbumsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoAlbumsViewController.h; sourceTree = "<group>"; };
 		C084ADA220C114EC00FE3C43 /* PhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoAlbum.h; sourceTree = "<group>"; };
 		C084ADA320C114EC00FE3C43 /* UIImage+PhotoEx.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+PhotoEx.m"; sourceTree = "<group>"; };
+		C084ADB220C11C7000FE3C43 /* SelectedCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectedCell.h; sourceTree = "<group>"; };
+		C084ADB320C11C7000FE3C43 /* SelectedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectedCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +93,8 @@
 				C084AD9120C114EC00FE3C43 /* ImagePicker */,
 				C084AD8F20C114EC00FE3C43 /* ViewController.h */,
 				C084AD9020C114EC00FE3C43 /* ViewController.m */,
+				C084ADB220C11C7000FE3C43 /* SelectedCell.h */,
+				C084ADB320C11C7000FE3C43 /* SelectedCell.m */,
 				C084AD7F20C114C500FE3C43 /* Main.storyboard */,
 				C084AD8220C114C500FE3C43 /* Assets.xcassets */,
 				C084AD8420C114C500FE3C43 /* LaunchScreen.storyboard */,
@@ -113,9 +118,9 @@
 		C084ADAE20C1151700FE3C43 /* controller */ = {
 			isa = PBXGroup;
 			children = (
+				C084AD9B20C114EC00FE3C43 /* ImagePickerViewController.h */,
 				C084AD9220C114EC00FE3C43 /* ImagePickerViewController.m */,
 				C084AD9520C114EC00FE3C43 /* PhotoAlbumsViewController.m */,
-				C084AD9B20C114EC00FE3C43 /* ImagePickerViewController.h */,
 				C084ADA120C114EC00FE3C43 /* PhotoAlbumsViewController.h */,
 			);
 			path = controller;
@@ -236,6 +241,7 @@
 				C084ADA920C114EC00FE3C43 /* ImagePickerBottomBar.m in Sources */,
 				C084ADAD20C114EC00FE3C43 /* UIImage+PhotoEx.m in Sources */,
 				C084ADAB20C114EC00FE3C43 /* PhotoCell.m in Sources */,
+				C084ADB420C11C7000FE3C43 /* SelectedCell.m in Sources */,
 				C084AD7B20C114C500FE3C43 /* AppDelegate.m in Sources */,
 				C084ADA720C114EC00FE3C43 /* PhotoAlbumsViewController.m in Sources */,
 				C084ADA820C114EC00FE3C43 /* PhotoAlbum.m in Sources */,
