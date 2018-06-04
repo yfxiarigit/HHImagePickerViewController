@@ -53,9 +53,22 @@
 #pragma mark - imagePicker delegate
 
 - (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinished:(NSArray<PhotoItem *> *)photos isSelectedOriginalImage:(BOOL)isSelectedOriginalImage {
-    self.dataArray = nil;
-    [self.dataArray addObjectsFromArray:photos];
-    [self.collectionView reloadData];
+    if (isSelectedOriginalImage) {
+        for (PhotoItem *item in photos) {
+            [item getOriginalPhotoWithAsset:item.phAsset resultHandler:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+                
+                self.dataArray = nil;
+                [self.dataArray addObjectsFromArray:photos];
+                [self.collectionView reloadData];
+                [_imagePickerViewController dismissViewControllerAnimated:YES completion:nil];
+            }];
+        }
+    }else {
+        self.dataArray = nil;
+        [self.dataArray addObjectsFromArray:photos];
+        [self.collectionView reloadData];
+    }
+    
     [_imagePickerViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -71,9 +84,7 @@
     _imagePickerViewController.delegate = self;
     _imagePickerViewController.photoAlbum = [PhotoHelper getTheAllPhotoAlbum];
     vc.imagePickerViewController = _imagePickerViewController;
-    if (self.dataArray.count) {
-        _imagePickerViewController.selectedPhotoItems = self.dataArray;
-    }
+    _imagePickerViewController.selectedPhotoItems = self.dataArray;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     nav.viewControllers = @[vc, _imagePickerViewController];
     [self.navigationController presentViewController:nav animated:YES completion:nil];

@@ -19,4 +19,7 @@
 
 ///获得压缩原图, 尺寸最大1000.
 - (UIImage *)getScaleImage;
+
+///获得原图
+- (void)getOriginalPhotoWithAsset:(PHAsset *)asset resultHandler:(void (^)(UIImage *photo,NSDictionary *info,BOOL isDegraded))completion;
 @end

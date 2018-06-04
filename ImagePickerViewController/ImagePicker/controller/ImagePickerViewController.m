@@ -17,12 +17,14 @@
 
 @implementation ImagePickerViewController {
     NSMutableArray<PhotoItem *> * _selectedPhotoItems;
+    BOOL _isSelectedOriginalImage;
 }
 
 - (instancetype)init {
     self = [super init];
     _maxAllowSelectedPhotoCount = 1;
     _allowSelectedOriginalImage = NO;
+    _isSelectedOriginalImage = NO;
     return self;
 }
 
@@ -79,8 +81,12 @@
 
 - (void)imagePickerBottomBarDidClickSureButton {
     if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerViewController:didFinished: isSelectedOriginalImage:)]) {
-        [self.delegate imagePickerViewController:self didFinished:self.selectedPhotoItems isSelectedOriginalImage:self.isAllowSelectedOriginalImage];
+        [self.delegate imagePickerViewController:self didFinished:self.selectedPhotoItems isSelectedOriginalImage:_isSelectedOriginalImage];
     }
+}
+
+- (void)imagePickerBottomBar:(ImagePickerBottomBar *)bar didClickOriginalButton:(BOOL)isSelected {
+    _isSelectedOriginalImage = isSelected;
 }
 
 #pragma mark - event
@@ -90,6 +96,11 @@
 }
 
 #pragma mark - getter
+
+- (void)setAllowSelectedOriginalImage:(BOOL)allowSelectedOriginalImage {
+    _allowSelectedOriginalImage = allowSelectedOriginalImage;
+    self.bottomBar.showOriginalButton = _allowSelectedOriginalImage;
+}
 
 - (void)setPhotoAlbum:(PhotoAlbum *)photoAlbum {
     _photoAlbum = photoAlbum;

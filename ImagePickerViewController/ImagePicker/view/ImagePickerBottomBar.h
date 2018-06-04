@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class ImagePickerBottomBar;
 @protocol ImagePickerBottomBarDelegate<NSObject>
 - (void)imagePickerBottomBarDidClickSureButton;
+- (void)imagePickerBottomBar:(ImagePickerBottomBar *)bar didClickOriginalButton:(BOOL)isSelected;
 @end
 
 @interface ImagePickerBottomBar : UIView
 @property (nonatomic, weak) id<ImagePickerBottomBarDelegate> delegate;
+@property (nonatomic, assign, getter=isShowOriginalButton) BOOL showOriginalButton;
 @end
