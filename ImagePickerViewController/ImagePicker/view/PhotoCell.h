@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PhotoAlbumCell.h"
 
+@class PhotoItem;
 @interface PhotoCell : UICollectionViewCell
 @property (nonatomic, strong) PhotoItem *photoItem;
+@property (nonatomic, copy) void(^didClickSelectButtonBlock)(BOOL isSelected);
 - (void)seletedPhoto:(BOOL)selected;
 @end

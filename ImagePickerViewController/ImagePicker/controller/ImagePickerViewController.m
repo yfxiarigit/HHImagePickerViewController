@@ -7,7 +7,11 @@
 //
 
 #import "ImagePickerViewController.h"
+#import "ImagePreViewController.h"
 #import "ImagePickerBottomBar.h"
+#import "PhotoCell.h"
+#import "PhotoItem.h"
+#import "PhotoAlbum.h"
 
 @interface ImagePickerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ImagePickerBottomBarDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -59,6 +63,14 @@
     PhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PhotoCell" forIndexPath:indexPath];
     PhotoItem *item = self.dataArray[indexPath.row];
     cell.photoItem = item;
+    __weak __typeof(&*self)weakSelf = self;
+    cell.didClickSelectButtonBlock = ^(BOOL isSelected) {
+        if (isSelected) {
+            [weakSelf.selectedPhotoItems addObject:item];
+        }else {
+            [weakSelf.selectedPhotoItems removeObject:item];
+        }
+    };
     return cell;
 }
 
@@ -67,14 +79,12 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    PhotoItem *item = self.dataArray[indexPath.row];
-    PhotoCell *cell = (PhotoCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    [cell seletedPhoto:!item.isSelected];
-    if (item.isSelected) {
-        [self.selectedPhotoItems addObject:item];
-    }else {
-        [self.selectedPhotoItems removeObject:item];
-    }
+//    [cell seletedPhoto:!item.isSelected];
+//    if (item.isSelected) {
+//        [self.selectedPhotoItems addObject:item];
+//    }else {
+//        [self.selectedPhotoItems removeObject:item];
+//    }
 }
 
 #pragma mark - bar delegate
@@ -87,6 +97,14 @@
 
 - (void)imagePickerBottomBar:(ImagePickerBottomBar *)bar didClickOriginalButton:(BOOL)isSelected {
     _isSelectedOriginalImage = isSelected;
+}
+
+- (void)imagePickerBottomBarDidClickPreviewButton {
+    if (self.selectedPhotoItems.count) {
+        ImagePreViewController *preview = [[ImagePreViewController alloc] init];
+        preview.dataArray = self.selectedPhotoItems;
+        [self.navigationController pushViewController:preview animated:YES];
+    }
 }
 
 #pragma mark - event

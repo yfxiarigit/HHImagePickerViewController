@@ -11,6 +11,7 @@
 #import "ImagePickerViewController.h"
 #import "PhotoHelper.h"
 #import "SelectedCell.h"
+#import "PhotoItem.h"
 
 @interface ViewController ()<ImagePickerViewControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -42,8 +43,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     SelectedCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SelectedCell" forIndexPath:indexPath];
     PhotoItem *item = self.dataArray[indexPath.row];
-    cell.image = [item getScaleImage];
-    NSLog(@"%@", NSStringFromCGSize(cell.image.size));
+    cell.item = item;
     return cell;
 }
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
@@ -55,13 +55,17 @@
 - (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinished:(NSArray<PhotoItem *> *)photos isSelectedOriginalImage:(BOOL)isSelectedOriginalImage {
     if (isSelectedOriginalImage) {
         for (PhotoItem *item in photos) {
-            [item getOriginalPhotoWithAsset:item.phAsset resultHandler:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
-                
+            [PhotoHelper requestOriginalPhotoWithAsset:item.phAsset resultHandler:^(UIImage *photo, NSDictionary *info, NSInteger dataLength) {
+                if (dataLength > 1024) {
+                    NSLog(@"获取图片原图，尺寸：%.1fM", dataLength / 1024.0);
+                }else {
+                    NSLog(@"获取图片原图，尺寸：%zdk", dataLength);
+                }
+                item.originalImage = photo;
                 self.dataArray = nil;
                 [self.dataArray addObjectsFromArray:photos];
                 [self.collectionView reloadData];
-                [_imagePickerViewController dismissViewControllerAnimated:YES completion:nil];
-            }];
+            } progressHandler:nil];
         }
     }else {
         self.dataArray = nil;

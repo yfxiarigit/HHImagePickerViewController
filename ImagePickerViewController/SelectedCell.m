@@ -7,6 +7,8 @@
 //
 
 #import "SelectedCell.h"
+#import "PhotoHelper.h"
+#import "PhotoItem.h"
 
 @interface SelectedCell()
 @property (nonatomic, strong) UIImageView *photoView;
@@ -28,9 +30,12 @@
     self.photoView.frame = self.contentView.bounds;
 }
 
-- (void)setImage:(UIImage *)image {
-    _image = image;
-    self.photoView.image = image;
+- (void)setItem:(PhotoItem *)item {
+    _item = item;
+    self.photoView.image = item.originalImage;
+//    [PhotoHelper requestPhotoWithPHAsset:item.phAsset imageSize:CGSizeMake(100, 100) completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+//        self.photoView.image = photo;
+//    } progressHandler:nil networkAccessAllowed:YES];
 }
 
 - (UIImageView *)photoView {

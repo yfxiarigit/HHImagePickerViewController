@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PhotoCell.h"
 
-@class ImagePickerViewController;
+@class ImagePickerViewController, PhotoAlbum, PhotoItem;
 @protocol ImagePickerViewControllerDelegate<NSObject>
 
 ///选中回调
@@ -33,5 +32,8 @@
 
 /// 默认为NO;
 @property (nonatomic, assign, getter=isAllowSelectedOriginalImage) BOOL allowSelectedOriginalImage;
+
+/// 允许拍摄
+@property (nonatomic, assign) BOOL allowTakePicture;
 
 @end

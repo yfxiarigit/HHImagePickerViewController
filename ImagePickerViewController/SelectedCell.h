@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-
+@class PhotoItem;
 @interface SelectedCell : UICollectionViewCell
-@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) PhotoItem *item;
 @end

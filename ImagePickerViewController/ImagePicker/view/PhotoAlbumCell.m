@@ -7,10 +7,14 @@
 //
 
 #import "PhotoAlbumCell.h"
+#import "PhotoAlbum.h"
+#import "PhotoHelper.h"
 
 @interface PhotoAlbumCell()
 @property (nonatomic, strong) UIImageView *albumPosterView;
 @property (nonatomic, strong) UILabel *albumNameLabel;
+@property (nonatomic, strong) NSString *localIdentifier;
+@property (nonatomic, assign) int32_t imageRequestID;
 @end
 
 @implementation PhotoAlbumCell
@@ -51,9 +55,20 @@
 
 - (void)setPhotoAlbum:(PhotoAlbum *)photoAlbum {
     _photoAlbum = photoAlbum;
-    [_photoAlbum getAlbumsPosterImageWithSize:CGSizeMake(58 * [UIScreen mainScreen].scale, 58 * [UIScreen mainScreen].scale) resultHandler:^(UIImage *image, NSDictionary *info) {
-        _albumPosterView.image = image;
-    }];
+    self.localIdentifier = photoAlbum.phCollection.localIdentifier;
+    [PhotoHelper cancelImageRequest:self.imageRequestID];
+    
+    if (photoAlbum.posterImage) {
+        _albumPosterView.image = photoAlbum.posterImage;
+    }else {
+        int32_t imageRequetID = [PhotoHelper requestAlbumPosterWithAlbum:photoAlbum imageWithSize:CGSizeMake(58, 58) resultHandler:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+            if ([photoAlbum.phCollection.localIdentifier isEqualToString:photoAlbum.phCollection.localIdentifier]) {
+                _albumPosterView.image = photo;
+                photoAlbum.posterImage = photo;
+            }
+        }];
+        self.imageRequestID = imageRequetID;
+    }
     _albumNameLabel.text = [NSString stringWithFormat:@"%@(%zd)",photoAlbum.albumName, photoAlbum.photoCount];
 }
 

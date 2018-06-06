@@ -9,7 +9,6 @@
 #import "PhotoAlbum.h"
 
 @interface PhotoAlbum()
-@property (nonatomic, strong) PHFetchResult *assetFetchResult;
 /// 相册封面
 @property (nonatomic, strong) UIImage *albumPoster;
 @end
@@ -31,6 +30,7 @@
     album.assetFetchResult = result;
     album.photoCount = result.count;
     album.albumName = collection.localizedTitle;
+    album.phCollection = collection;
     
     return album;
 }
@@ -61,38 +61,6 @@
             handler(imageArray);
         });
     });
-}
-
-- (void)getAlbumsPosterImageWithSize:(CGSize)size resultHandler:(void (^)(UIImage *image, NSDictionary *info))resultHandler
-{
-    if (self.albumPoster && resultHandler) {
-        resultHandler(self.albumPoster, nil);
-        return;
-    }
-    
-    __weak typeof(self) weakSelf = self;
-    PHImageManager *imageManager = [PHImageManager defaultManager];
-    
-    if (CGSizeEqualToSize(size, CGSizeZero)) {
-        CGFloat length = 100.f;
-        size = CGSizeMake(length, length);
-    }
-    
-    [imageManager requestImageForAsset:[self.assetFetchResult lastObject]
-                            targetSize:size
-                           contentMode:PHImageContentModeAspectFit
-                               options:nil
-                         resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-                             
-                             if (result) {
-                                 __strong typeof(weakSelf) strongSelf = weakSelf;
-                                 strongSelf.albumPoster = result;
-                                 
-                                 if (resultHandler) {
-                                     resultHandler(result, info);
-                                 }
-                             }
-                         }];
 }
 
 @end

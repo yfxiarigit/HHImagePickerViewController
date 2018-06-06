@@ -7,6 +7,8 @@
 //
 
 #import "PhotoCell.h"
+#import "PhotoItem.h"
+#import "PhotoHelper.h"
 
 @interface PhotoCell()
 @property (nonatomic, strong) UIImageView *photoView;
@@ -33,20 +35,30 @@
 
 - (void)setPhotoItem:(PhotoItem *)photoItem {
     _photoItem = photoItem;
-    self.coverView.selected = photoItem.selected;
     [self seletedPhoto:photoItem.selected];
-    self.photoView.image = nil;
     self.localIdentifier = photoItem.phAsset.localIdentifier;
-    [[PHImageManager defaultManager] cancelImageRequest:self.imageRequestID];
-    int32_t imageRequestID = [photoItem getThumbImageWithSize:CGSizeMake(self.bounds.size.width, self.bounds.size.height) resultHandler:^(UIImage *image, NSDictionary *info) {
-        if ([photoItem.phAsset.localIdentifier isEqualToString:self.localIdentifier]) {
-            self.photoView.image = image;
-        }
-    }];
-    self.imageRequestID = imageRequestID;
+    [PhotoHelper cancelImageRequest:self.imageRequestID];
+    
+    if (photoItem.thumbnail) {
+        self.photoView.image = photoItem.thumbnail;
+    }else {
+        int32_t imageRequestID = [PhotoHelper requestPhotoWithPHAsset:photoItem.phAsset imageSize:CGSizeMake(375 / 4.0, 375 / 4.0) completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+            if ([photoItem.phAsset.localIdentifier isEqualToString:self.localIdentifier]) {
+                self.photoView.image = photo;
+            }
+        } progressHandler:nil networkAccessAllowed:YES];
+        self.imageRequestID = imageRequestID;
+    }
 }
 
 #pragma mark - event
+- (void)clickSelectButton:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    [self seletedPhoto:sender.selected];
+    if (self.didClickSelectButtonBlock) {
+        self.didClickSelectButtonBlock(sender.selected);
+    }
+}
 
 #pragma mark - getter
 
@@ -76,6 +88,7 @@
         [_selectButton setImage:[UIImage imageNamed:@"photoSelected"] forState:UIControlStateSelected];
         _selectButton.frame = CGRectMake(self.bounds.size.width - 25 - 5, 5, 25, 25);
         _selectButton.selected = NO;
+        [_selectButton addTarget:self action:@selector(clickSelectButton:) forControlEvents:UIControlEventTouchDown];
     }
     return _selectButton;
 }

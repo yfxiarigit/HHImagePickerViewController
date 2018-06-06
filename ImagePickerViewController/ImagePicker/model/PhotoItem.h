@@ -13,13 +13,9 @@
 
 @property (nonatomic, assign, getter=isSelected) BOOL selected;
 @property (nonatomic, strong) PHAsset *phAsset;
+@property (nonatomic, strong) UIImage *thumbnail;
+@property (nonatomic, strong) UIImage *originalImage;
+@property (nonatomic, strong) UIImage *previewImage;
 
 + (PhotoItem *)itemWithPHAsset:(PHAsset *)asset;
-- (PHImageRequestID)getThumbImageWithSize:(CGSize)size resultHandler:(void (^)(UIImage *image, NSDictionary *info))resultHandler;
-
-///获得压缩原图, 尺寸最大1000.
-- (UIImage *)getScaleImage;
-
-///获得原图
-- (void)getOriginalPhotoWithAsset:(PHAsset *)asset resultHandler:(void (^)(UIImage *photo,NSDictionary *info,BOOL isDegraded))completion;
 @end

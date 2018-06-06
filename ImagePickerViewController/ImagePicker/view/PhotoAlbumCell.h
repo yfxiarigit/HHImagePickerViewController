@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PhotoAlbum.h"
 
+@class PhotoAlbum;
 @interface PhotoAlbumCell : UITableViewCell
 @property (nonatomic, strong) PhotoAlbum *photoAlbum;
 @end

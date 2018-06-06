@@ -7,7 +7,7 @@
 //
 
 #import "PhotoItem.h"
-#import "UIImage+PhotoEx.h"
+#import "PhotoHelper.h"
 
 @interface PhotoItem()
 /// 最大缩略图
@@ -56,111 +56,6 @@
 }
 
 
-- (UIImage *)getScaleImage
-{
-    if (self.scalePhoto) {
-        return _scalePhoto;
-    }
-    __block UIImage *originImage = nil;
-
-    if (!self.phAsset) {
-        return nil;
-    }
-
-    PHAsset *asset = self.phAsset;
-    PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
-    option.synchronous = YES;
-    option.resizeMode = PHImageRequestOptionsResizeModeFast;
-    option.deliveryMode = PHImageRequestOptionsDeliveryModeFastFormat;
-
-    //从asset中获得图片
-    CGSize size = CGSizeMake(asset.pixelWidth, asset.pixelHeight);
-    [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:[PhotoItem maxImageSizeWithOriginalSize:size] contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-    
-        BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
-        if (downloadFinined && result != nil) {
-            // 调整图片方向
-            result = [PhotoItem fixOrientation:result];
-            originImage = result;
-            //下面两个中任一个都可以标示相册中图片的唯一性
-            originImage.localIdentifier = asset.localIdentifier;
-            originImage.phImageFileURLKey = info[@"PHImageFileURLKey"];
-        }
-    }];
-    self.scalePhoto = originImage;
-    return originImage;
-}
-
-+ (UIImage *)fixOrientation:(UIImage *)srcImg {
-    if (srcImg.imageOrientation == UIImageOrientationUp) return srcImg;
-    CGAffineTransform transform = CGAffineTransformIdentity;
-    switch (srcImg.imageOrientation) {
-        case UIImageOrientationDown:
-        case UIImageOrientationDownMirrored:
-            transform = CGAffineTransformTranslate(transform, srcImg.size.width, srcImg.size.height);
-            transform = CGAffineTransformRotate(transform, M_PI);
-            break;
-            
-        case UIImageOrientationLeft:
-        case UIImageOrientationLeftMirrored:
-            transform = CGAffineTransformTranslate(transform, srcImg.size.width, 0);
-            transform = CGAffineTransformRotate(transform, M_PI_2);
-            break;
-            
-        case UIImageOrientationRight:
-        case UIImageOrientationRightMirrored:
-            transform = CGAffineTransformTranslate(transform, 0, srcImg.size.height);
-            transform = CGAffineTransformRotate(transform, -M_PI_2);
-            break;
-        case UIImageOrientationUp:
-        case UIImageOrientationUpMirrored:
-            break;
-    }
-    
-    switch (srcImg.imageOrientation) {
-        case UIImageOrientationUpMirrored:
-        case UIImageOrientationDownMirrored:
-            transform = CGAffineTransformTranslate(transform, srcImg.size.width, 0);
-            transform = CGAffineTransformScale(transform, -1, 1);
-            break;
-            
-        case UIImageOrientationLeftMirrored:
-        case UIImageOrientationRightMirrored:
-            transform = CGAffineTransformTranslate(transform, srcImg.size.height, 0);
-            transform = CGAffineTransformScale(transform, -1, 1);
-            break;
-        case UIImageOrientationUp:
-        case UIImageOrientationDown:
-        case UIImageOrientationLeft:
-        case UIImageOrientationRight:
-            break;
-    }
-    
-    CGContextRef ctx = CGBitmapContextCreate(NULL, srcImg.size.width, srcImg.size.height,
-                                             CGImageGetBitsPerComponent(srcImg.CGImage), 0,
-                                             CGImageGetColorSpace(srcImg.CGImage),
-                                             CGImageGetBitmapInfo(srcImg.CGImage));
-    CGContextConcatCTM(ctx, transform);
-    switch (srcImg.imageOrientation) {
-        case UIImageOrientationLeft:
-        case UIImageOrientationLeftMirrored:
-        case UIImageOrientationRight:
-        case UIImageOrientationRightMirrored:
-            CGContextDrawImage(ctx, CGRectMake(0,0,srcImg.size.height,srcImg.size.width), srcImg.CGImage);
-            break;
-            
-        default:
-            CGContextDrawImage(ctx, CGRectMake(0,0,srcImg.size.width,srcImg.size.height), srcImg.CGImage);
-            break;
-    }
-    
-    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
-    UIImage *img = [UIImage imageWithCGImage:cgimg];
-    CGContextRelease(ctx);
-    CGImageRelease(cgimg);
-    return img;
-}
-
 + (CGSize)maxImageSizeWithOriginalSize:(CGSize)originalSize
 {
     CGFloat sizeScale = originalSize.width / originalSize.height;
@@ -197,21 +92,6 @@
         }
     
     return originalSize;
-}
-
-
-- (void)getOriginalPhotoWithAsset:(PHAsset *)asset resultHandler:(void (^)(UIImage *photo,NSDictionary *info,BOOL isDegraded))completion {
-    PHImageRequestOptions *option = [[PHImageRequestOptions alloc]init];
-    option.networkAccessAllowed = YES;
-    option.resizeMode = PHImageRequestOptionsResizeModeFast;
-    [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFit options:option resultHandler:^(UIImage *result, NSDictionary *info) {
-        BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
-        if (downloadFinined && result) {
-            result = [PhotoItem fixOrientation:result];
-            BOOL isDegraded = [[info objectForKey:PHImageResultIsDegradedKey] boolValue];
-            if (completion) completion(result,info,isDegraded);
-        }
-    }];
 }
 
 

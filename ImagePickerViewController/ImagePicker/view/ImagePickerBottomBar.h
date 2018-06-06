@@ -12,6 +12,7 @@
 @protocol ImagePickerBottomBarDelegate<NSObject>
 - (void)imagePickerBottomBarDidClickSureButton;
 - (void)imagePickerBottomBar:(ImagePickerBottomBar *)bar didClickOriginalButton:(BOOL)isSelected;
+- (void)imagePickerBottomBarDidClickPreviewButton;
 @end
 
 @interface ImagePickerBottomBar : UIView

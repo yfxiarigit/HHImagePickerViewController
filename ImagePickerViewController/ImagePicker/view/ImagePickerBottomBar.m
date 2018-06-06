@@ -11,6 +11,7 @@
 @interface ImagePickerBottomBar()
 @property (nonatomic, strong) UIButton *originalButton;
 @property (nonatomic, strong) UIButton *sureButton;
+@property (nonatomic, strong) UIButton *previewButton;
 @property (nonatomic, strong) UIView *line;
 @end
 
@@ -25,6 +26,7 @@
         self.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
         [self addSubview:self.originalButton];
         [self addSubview:self.sureButton];
+        [self addSubview:self.previewButton];
         [self addSubview:self.line];
     }
     return self;
@@ -33,8 +35,9 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     self.sureButton.frame = CGRectMake(self.frame.size.width - 75, 0.5 * (self.frame.size.height - 30), 60, 30);
-    self.line.frame = CGRectMake(0, 0, self.frame.size.width, 1);
+    self.line.frame = CGRectMake(0, 0, self.frame.size.width, 0.33);
     self.originalButton.frame = CGRectMake(5, 0, 80, self.frame.size.height);
+    self.previewButton.frame = CGRectMake(CGRectGetMaxX(self.originalButton.frame) + 10, 0, 60, self.frame.size.height);
 }
 
 #pragma mark - event
@@ -50,6 +53,12 @@
     _originalButton.selected = _isSelectedOriginal;
     if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerBottomBar:didClickOriginalButton:)]) {
         [self.delegate imagePickerBottomBar:self didClickOriginalButton:_isSelectedOriginal];
+    }
+}
+
+- (void)clickPreviewButton {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerBottomBarDidClickPreviewButton)]) {
+        [self.delegate imagePickerBottomBarDidClickPreviewButton];
     }
 }
 
@@ -90,6 +99,17 @@
         [_originalButton addTarget:self action:@selector(clickOriginalButton) forControlEvents:UIControlEventTouchDown];
     }
     return _originalButton;
+}
+
+- (UIButton *)previewButton {
+    if (!_previewButton) {
+        _previewButton = [[UIButton alloc] init];
+        [_previewButton setTitle:@"预览" forState:UIControlStateNormal];
+        [_previewButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        _previewButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        [_previewButton addTarget:self action:@selector(clickPreviewButton) forControlEvents:UIControlEventTouchDown];
+    }
+    return _previewButton;
 }
 
 @end
