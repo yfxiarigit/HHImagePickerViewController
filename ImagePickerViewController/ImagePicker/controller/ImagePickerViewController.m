@@ -36,6 +36,7 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.view.backgroundColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
     [self.view addSubview:self.collectionView];
     [self.view addSubview:self.bottomBar];
@@ -47,10 +48,10 @@
     if ([UIScreen mainScreen].bounds.size.height == 812) {
         bottomArea = 34;
     }
-    _collectionView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    UIEdgeInsets inset = _collectionView.contentInset;
+    self.collectionView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    UIEdgeInsets inset = self.collectionView.contentInset;
     inset.bottom = bottomArea + 44;
-    _collectionView.contentInset = inset;
+    self.collectionView.contentInset = inset;
     _bottomBar.frame = CGRectMake(0, self.view.bounds.size.height - bottomArea - 44, _collectionView.bounds.size.width, 44);
 }
 
@@ -154,7 +155,7 @@
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
-        CGFloat cellWidth = floorf((self.view.bounds.size.width-6) / 4.0);
+        CGFloat cellWidth = floorf(([UIScreen mainScreen].bounds.size.width-6) / 4.0);
         layout.itemSize = CGSizeMake(cellWidth, cellWidth);
         layout.minimumLineSpacing = 2;
         layout.minimumInteritemSpacing = 2;

@@ -45,7 +45,6 @@
 }
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ImagePreviewCell *cell = (ImagePreviewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"ImagePreviewCell" forIndexPath:indexPath];
-    cell.item = self.dataArray[indexPath.row];
     cell.delegate = self;
     return cell;
 }
@@ -54,9 +53,8 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (((ImagePreviewCell *)cell).item) {
-        ((ImagePreviewCell *)cell).item = self.dataArray[indexPath.row];
-    }
+    //写在这里是为了使返回到被缩放的cell时，能够及时复原原始图片大小
+    ((ImagePreviewCell *)cell).item = self.dataArray[indexPath.row];
 }
 
 - (BOOL)prefersStatusBarHidden {
