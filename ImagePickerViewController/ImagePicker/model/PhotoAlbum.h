@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "PhotoItem.h"
 
-@class PHCollection;
+
 @interface PhotoAlbum : NSObject
 /// 该相册中包含的照片数量
 @property (nonatomic, assign) NSInteger photoCount;

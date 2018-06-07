@@ -16,7 +16,10 @@
 @property (nonatomic, strong) UIImageView *imageView;
 @end
 
-@implementation ImagePreviewCell
+@implementation ImagePreviewCell {
+    UITapGestureRecognizer *_tapGesture;
+    UITapGestureRecognizer *_doubleTapGesture;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -25,6 +28,7 @@
         self.contentView.backgroundColor = [UIColor blackColor];
         [self.contentView addSubview:self.scrollView];
         [self.scrollView addSubview:self.imageView];
+        [_tapGesture requireGestureRecognizerToFail:_doubleTapGesture];
     }
     return self;
 }
@@ -93,7 +97,9 @@
     _item = item;
     [PhotoHelper cancelImageRequest:self.imageRequestID];
     
+    self.imageView.image = nil;
     if (item.previewImage) {
+        self.imageView.image = item.previewImage;
         self.item.previewImage = item.previewImage;
     }else {
         int32_t imageRequestID = [PhotoHelper requestPreviewPhotoWithAsset:item.phAsset resultHandler:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
@@ -104,7 +110,9 @@
                 //需要自己计算contentSize，因为scrollView根据内容自适应contentSize不准确
                 self.scrollView.contentSize = CGSizeMake(self.imageView.bounds.size.width, self.imageView.bounds.size.height);
             }
-        } progressHandler:nil];
+        } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+            NSLog(@"%.2lf", progress);
+        }];
         self.imageRequestID = imageRequestID;
     }
     self.scrollView.zoomScale = 1;
@@ -162,6 +170,10 @@
         _scrollView.minimumZoomScale = 1;
         _scrollView.clipsToBounds = YES;
         _scrollView.frame = self.bounds;
+        
+        _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
+        _tapGesture.delegate = self;
+        [_scrollView addGestureRecognizer:_tapGesture];
         if (@available(iOS 11.0, *)) {
             _scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
@@ -176,15 +188,10 @@
         _imageView.backgroundColor = [UIColor blackColor];
         _imageView.userInteractionEnabled = YES;
         
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismiss)];
-        tap.delegate = self;
-        [_imageView addGestureRecognizer:tap];
-        
-        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
-        doubleTap.delegate = self;
-        doubleTap.numberOfTapsRequired = 2;
-        [tap requireGestureRecognizerToFail: doubleTap];
-        [_imageView addGestureRecognizer:doubleTap];
+        _doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
+        _doubleTapGesture.delegate = self;
+        _doubleTapGesture.numberOfTapsRequired = 2;
+        [_imageView addGestureRecognizer:_doubleTapGesture];
         
         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPress.minimumPressDuration = .5;

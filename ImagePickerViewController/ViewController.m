@@ -53,25 +53,9 @@
 #pragma mark - imagePicker delegate
 
 - (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinished:(NSArray<PhotoItem *> *)photos isSelectedOriginalImage:(BOOL)isSelectedOriginalImage {
-    if (isSelectedOriginalImage) {
-        for (PhotoItem *item in photos) {
-            [PhotoHelper requestOriginalPhotoWithAsset:item.phAsset resultHandler:^(UIImage *photo, NSDictionary *info, NSInteger dataLength) {
-                if (dataLength > 1024) {
-                    NSLog(@"获取图片原图，尺寸：%.1fM", dataLength / 1024.0);
-                }else {
-                    NSLog(@"获取图片原图，尺寸：%zdk", dataLength);
-                }
-                item.originalImage = photo;
-                self.dataArray = nil;
-                [self.dataArray addObjectsFromArray:photos];
-                [self.collectionView reloadData];
-            } progressHandler:nil];
-        }
-    }else {
-        self.dataArray = nil;
-        [self.dataArray addObjectsFromArray:photos];
-        [self.collectionView reloadData];
-    }
+    self.dataArray = nil;
+    [self.dataArray addObjectsFromArray:photos];
+    [self.collectionView reloadData];
     
     [_imagePickerViewController dismissViewControllerAnimated:YES completion:nil];
 }
@@ -83,6 +67,29 @@
 #pragma mark - event
 
 - (void)selectPhotoButtonClick {
+    PHAuthorizationStatus status = [PhotoHelper authorizationStatusAuthorized];
+    if (status == PHAuthorizationStatusNotDetermined) {
+        [PhotoHelper requestAuthorization:^(BOOL authorizationStatusAuthorized) {
+            if (!authorizationStatusAuthorized) {
+                return;
+            }
+            [self gotoImagePickerController];
+            
+        }];
+    }else if (status == PHAuthorizationStatusDenied) {
+        // alert
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请在iPhone的\"设置->隐私->相机\"选项中，允许xxx访问你的相机" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *sure = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        [alert addAction:sure];
+        [self presentViewController:alert animated:YES completion:nil];
+    }else {
+        [self gotoImagePickerController];
+    }
+}
+
+- (void)gotoImagePickerController {
     PhotoAlbumsViewController *vc = [[PhotoAlbumsViewController alloc] init];
     _imagePickerViewController = [[ImagePickerViewController alloc] init];
     _imagePickerViewController.delegate = self;

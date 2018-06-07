@@ -58,6 +58,7 @@
     self.localIdentifier = photoAlbum.phCollection.localIdentifier;
     [PhotoHelper cancelImageRequest:self.imageRequestID];
     
+    _albumPosterView.image = nil;
     if (photoAlbum.posterImage) {
         _albumPosterView.image = photoAlbum.posterImage;
     }else {

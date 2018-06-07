@@ -7,11 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 
-static NSString *KOriginalImageDataLengthKey = @"KOriginalImageDataLengthKey";
 
-@class PhotoAlbum, PhotoItem, PHAsset;
+@class PhotoAlbum, PhotoItem;
 @interface PhotoHelper : NSObject
+
+///判断
++ (PHAuthorizationStatus)authorizationStatusAuthorized;
+/// 使用helper获取相册或图片前，先要请求授权。
++ (void)requestAuthorization:(void(^)(BOOL authorizationStatusAuthorized))handler;
 
 ///获取相册集合
 + (NSArray<PhotoAlbum *> *)getPhotoAlbums;
@@ -19,7 +24,7 @@ static NSString *KOriginalImageDataLengthKey = @"KOriginalImageDataLengthKey";
 ///获得‘所有照片’相册
 +(PhotoAlbum *)getTheAllPhotoAlbum;
 
-///获取指定大小的图片
+///获取指定大小的图片 (networkAccessAllowed 要设置为YES，因为图片可能存放在iCloud)
 + (int32_t)requestPhotoWithPHAsset:(PHAsset *)asset imageSize:(CGSize)imageSize completion:(void (^)(UIImage *photo,NSDictionary *info,BOOL isDegraded))completion progressHandler:(void (^)(double progress, NSError *error, BOOL *stop, NSDictionary *info))progressHandler networkAccessAllowed:(BOOL)networkAccessAllowed;
 
 ///获取原图 (dataLength:单位kb)

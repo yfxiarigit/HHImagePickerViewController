@@ -8,8 +8,28 @@
 
 #import "PhotoHelper.h"
 #import "PhotoAlbum.h"
-
 @implementation PhotoHelper
+
+
++ (void)requestAuthorization:(void(^)(BOOL authorizationStatusAuthorized))handler {
+    if (!handler) {
+        return;
+    }
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (status == PHAuthorizationStatusAuthorized) {
+                handler(YES);
+            }else {
+                handler(NO);
+            }
+        });
+    }];
+}
+
++ (PHAuthorizationStatus)authorizationStatusAuthorized {
+    return [PHPhotoLibrary authorizationStatus];
+}
+
 
 +(PhotoAlbum *)getTheAllPhotoAlbum {
     PhotoAlbum *album;
@@ -86,14 +106,21 @@
         }
     }
     
-    PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
-    option.resizeMode = PHImageRequestOptionsResizeModeFast;
-    option.networkAccessAllowed = networkAccessAllowed;
+    PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
+    options.resizeMode = PHImageRequestOptionsResizeModeFast;
+    options.networkAccessAllowed = networkAccessAllowed;
+    options.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (progressHandler) {
+                progressHandler(progress, error, stop, info);
+            }
+        });
+    };
     int32_t imageRequestID = [[PHImageManager defaultManager] requestImageForAsset:asset
                                                                     targetSize:imageSize
                                                    contentMode:PHImageContentModeAspectFill
-                                                                           options:option        resultHandler:^(UIImage *result, NSDictionary *info) {
-        
+                                                                           options:options        resultHandler:^(UIImage *result, NSDictionary *info) {
+                                                                               NSLog(@"%@", info[PHImageResultIsInCloudKey]);
         BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
         if (downloadFinined && result) {
             //result = [PhotoHelper fixOrientation:result];//这种方式不会设置scale。

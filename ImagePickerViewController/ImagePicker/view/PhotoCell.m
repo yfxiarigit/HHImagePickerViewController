@@ -39,6 +39,7 @@
     self.localIdentifier = photoItem.phAsset.localIdentifier;
     [PhotoHelper cancelImageRequest:self.imageRequestID];
     
+    self.photoView.image = nil;
     if (photoItem.thumbnail) {
         self.photoView.image = photoItem.thumbnail;
     }else {

@@ -11,4 +11,5 @@
 @class PhotoItem;
 @interface SelectedCell : UICollectionViewCell
 @property (nonatomic, strong) PhotoItem *item;
+@property (nonatomic, assign) int32_t imageRequestID;
 @end

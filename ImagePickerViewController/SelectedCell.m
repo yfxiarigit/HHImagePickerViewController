@@ -32,10 +32,12 @@
 
 - (void)setItem:(PhotoItem *)item {
     _item = item;
-    self.photoView.image = item.originalImage;
-//    [PhotoHelper requestPhotoWithPHAsset:item.phAsset imageSize:CGSizeMake(100, 100) completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
-//        self.photoView.image = photo;
-//    } progressHandler:nil networkAccessAllowed:YES];
+    [PhotoHelper cancelImageRequest:self.imageRequestID];
+    [PhotoHelper requestPhotoWithPHAsset:item.phAsset imageSize:CGSizeMake(100, 100) completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+        if (item == self.item) {
+            self.photoView.image = photo;
+        }
+    } progressHandler:nil networkAccessAllowed:YES];
 }
 
 - (UIImageView *)photoView {

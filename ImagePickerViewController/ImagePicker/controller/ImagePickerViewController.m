@@ -12,6 +12,7 @@
 #import "PhotoCell.h"
 #import "PhotoItem.h"
 #import "PhotoAlbum.h"
+#import <Photos/Photos.h>
 
 @interface ImagePickerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ImagePickerBottomBarDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
