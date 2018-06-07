@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C020000F20C8EA8F000F54B4 /* CircleProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C020000E20C8EA8F000F54B4 /* CircleProgressView.m */; };
 		C084AD7B20C114C500FE3C43 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C084AD7A20C114C500FE3C43 /* AppDelegate.m */; };
 		C084AD8120C114C500FE3C43 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C084AD7F20C114C500FE3C43 /* Main.storyboard */; };
 		C084AD8320C114C500FE3C43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C084AD8220C114C500FE3C43 /* Assets.xcassets */; };
@@ -27,6 +28,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C020000D20C8EA8F000F54B4 /* CircleProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircleProgressView.h; sourceTree = "<group>"; };
+		C020000E20C8EA8F000F54B4 /* CircleProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleProgressView.m; sourceTree = "<group>"; };
 		C084AD7620C114C500FE3C43 /* ImagePickerViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImagePickerViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C084AD7920C114C500FE3C43 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C084AD7A20C114C500FE3C43 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -93,6 +96,8 @@
 			children = (
 				C084AD7920C114C500FE3C43 /* AppDelegate.h */,
 				C084AD7A20C114C500FE3C43 /* AppDelegate.m */,
+				C020000D20C8EA8F000F54B4 /* CircleProgressView.h */,
+				C020000E20C8EA8F000F54B4 /* CircleProgressView.m */,
 				C084AD9120C114EC00FE3C43 /* ImagePicker */,
 				C084AD8F20C114EC00FE3C43 /* ViewController.h */,
 				C084AD9020C114EC00FE3C43 /* ViewController.m */,
@@ -242,6 +247,7 @@
 				C084ADA620C114EC00FE3C43 /* PhotoHelper.m in Sources */,
 				C084AD8920C114C500FE3C43 /* main.m in Sources */,
 				C084ADAA20C114EC00FE3C43 /* PhotoItem.m in Sources */,
+				C020000F20C8EA8F000F54B4 /* CircleProgressView.m in Sources */,
 				C0E3C3F220C67AE100222801 /* ImagePreViewController.m in Sources */,
 				C0E3C3F520C67C9E00222801 /* ImagePreviewCell.m in Sources */,
 				C084ADA520C114EC00FE3C43 /* ImagePickerViewController.m in Sources */,

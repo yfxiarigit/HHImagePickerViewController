@@ -119,8 +119,9 @@
     int32_t imageRequestID = [[PHImageManager defaultManager] requestImageForAsset:asset
                                                                     targetSize:imageSize
                                                    contentMode:PHImageContentModeAspectFill
-                                                                           options:options        resultHandler:^(UIImage *result, NSDictionary *info) {
-                                                                               NSLog(@"%@", info[PHImageResultIsInCloudKey]);
+                                                                           options:options
+                                                                     resultHandler:^(UIImage *result, NSDictionary *info) {
+        NSLog(@"%@", info[PHImageResultIsInCloudKey]);
         BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
         if (downloadFinined && result) {
             //result = [PhotoHelper fixOrientation:result];//这种方式不会设置scale。
@@ -131,14 +132,14 @@
     return imageRequestID;
 }
 
-+ (int32_t)requestPreviewPhotoWithAsset:(PHAsset *)asset resultHandler:(void (^)(UIImage *photo,NSDictionary *info,BOOL isDegraded))completion progressHandler:(void (^)(double progress, NSError *error, BOOL *stop, NSDictionary *info))progressHandler {
++ (int32_t)requestPreviewPhotoWithAsset:(PHAsset *)asset resultHandler:(void (^)(UIImage *photo,NSDictionary *info,BOOL isDegraded))completion progressHandler:(void (^)(double progress, NSError *error, BOOL *stop, NSDictionary *info))progressHandler networkAccessAllowed:(BOOL)networkAccessAllowed {
     return [self requestPhotoWithPHAsset:asset imageSize:[UIScreen mainScreen].bounds.size completion:completion progressHandler:progressHandler networkAccessAllowed:YES];
 }
 
-+ (int32_t)requestOriginalPhotoWithAsset:(PHAsset *)asset resultHandler:(void (^)(UIImage *photo,NSDictionary *info,NSInteger dataLength))completion progressHandler:(void (^)(double progress, NSError *error, BOOL *stop, NSDictionary *info))progressHandler {
++ (int32_t)requestOriginalPhotoWithAsset:(PHAsset *)asset resultHandler:(void (^)(UIImage *photo,NSDictionary *info,NSInteger dataLength))completion progressHandler:(void (^)(double progress, NSError *error, BOOL *stop, NSDictionary *info))progressHandler networkAccessAllowed:(BOOL)networkAccessAllowed {
     
     PHImageRequestOptions *options = [[PHImageRequestOptions alloc] init];
-    options.networkAccessAllowed = YES;
+    options.networkAccessAllowed = networkAccessAllowed;
     options.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (progressHandler) {
@@ -156,8 +157,7 @@
     return imageRequestID;
 }
 
-+ (int32_t)requestAlbumPosterWithAlbum:(PhotoAlbum *)album imageWithSize:(CGSize)size resultHandler:(void (^)(UIImage *image, NSDictionary *info,BOOL isDegraded))resultHandler
-{
++ (int32_t)requestAlbumPosterWithAlbum:(PhotoAlbum *)album imageWithSize:(CGSize)size resultHandler:(void (^)(UIImage *image, NSDictionary *info,BOOL isDegraded))resultHandler networkAccessAllowed:(BOOL)networkAccessAllowed {
     if (resultHandler == nil) {
         return 0;
     }
@@ -165,7 +165,7 @@
         if (photo) {
             resultHandler(photo, info, isDegraded);
         }
-    } progressHandler:nil networkAccessAllowed:YES];
+    } progressHandler:nil networkAccessAllowed:networkAccessAllowed];
     return imageRequestID;
 }
 

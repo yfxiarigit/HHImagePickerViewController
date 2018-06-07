@@ -12,6 +12,7 @@
 #import "PhotoHelper.h"
 #import "SelectedCell.h"
 #import "PhotoItem.h"
+#import "CircleProgressView.h"
 
 @interface ViewController ()<ImagePickerViewControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) UICollectionView *collectionView;

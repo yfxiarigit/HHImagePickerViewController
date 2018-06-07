@@ -67,7 +67,7 @@
                 _albumPosterView.image = photo;
                 photoAlbum.posterImage = photo;
             }
-        }];
+        } networkAccessAllowed:YES];
         self.imageRequestID = imageRequetID;
     }
     _albumNameLabel.text = [NSString stringWithFormat:@"%@(%zd)",photoAlbum.albumName, photoAlbum.photoCount];

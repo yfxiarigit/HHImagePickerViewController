@@ -7,6 +7,7 @@
 //
 
 #import "ImagePreviewCell.h"
+#import "CircleProgressView.h"
 #import "PhotoHelper.h"
 #import "PhotoItem.h"
 
@@ -14,6 +15,7 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containorView;
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) CircleProgressView *circleProgressView;
 @end
 
 @implementation ImagePreviewCell {
@@ -28,6 +30,7 @@
         self.contentView.backgroundColor = [UIColor blackColor];
         [self.contentView addSubview:self.scrollView];
         [self.scrollView addSubview:self.imageView];
+        [self.contentView addSubview:self.circleProgressView];
         [_tapGesture requireGestureRecognizerToFail:_doubleTapGesture];
     }
     return self;
@@ -111,8 +114,14 @@
                 self.scrollView.contentSize = CGSizeMake(self.imageView.bounds.size.width, self.imageView.bounds.size.height);
             }
         } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
-            NSLog(@"%.2lf", progress);
-        }];
+            if (progress >= 1) {
+                self.circleProgressView.hidden = YES;
+                self.circleProgressView.percent = 0;
+            }else {
+                self.circleProgressView.percent = progress;
+                self.circleProgressView.hidden = NO;
+            }
+        } networkAccessAllowed:YES];
         self.imageRequestID = imageRequestID;
     }
     self.scrollView.zoomScale = 1;
@@ -199,6 +208,21 @@
         [_imageView addGestureRecognizer:longPress];
     }
     return _imageView;
+}
+
+- (CircleProgressView *)circleProgressView {
+    if (!_circleProgressView) {
+        _circleProgressView = [[CircleProgressView alloc] init];
+        _circleProgressView.type = CircleProgressViewTypeFill;
+        _circleProgressView.progressBackgroundColor = [UIColor whiteColor];
+        CGFloat w = 35;
+        CGFloat h = 35;
+        CGFloat x = self.frame.size.width * 0.5 - w * 0.5;
+        CGFloat y = self.frame.size.height * 0.5 - w * 0.5;
+        _circleProgressView.frame = CGRectMake(x, y, w, h);
+        _circleProgressView.hidden = YES;
+    }
+    return _circleProgressView;
 }
 
 @end
