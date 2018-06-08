@@ -7,6 +7,7 @@
 //
 
 #import "ImagePickerViewController.h"
+#import "ImageCropViewController.h"
 #import "ImagePreViewController.h"
 #import "ImagePickerBottomBar.h"
 #import "PhotoCell.h"
@@ -14,7 +15,7 @@
 #import "PhotoAlbum.h"
 #import <Photos/Photos.h>
 
-@interface ImagePickerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ImagePickerBottomBarDelegate>
+@interface ImagePickerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ImagePickerBottomBarDelegate, ImageCropViewControllerDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray *dataArray;
 @property (nonatomic, strong) ImagePickerBottomBar *bottomBar;
@@ -87,13 +88,30 @@
 //    }else {
 //        [self.selectedPhotoItems removeObject:item];
 //    }
+    
+    PhotoItem *item = self.dataArray[indexPath.row];
+    ImageCropViewController *vc = [[ImageCropViewController alloc] initWithImage:item.thumbnail cropRect:CGRectMake(0.5 *([UIScreen mainScreen].bounds.size.width - 300), 0.5 *([UIScreen mainScreen].bounds.size.height - 300), 300, 300) imageCropStyle:ImageCropStyleCircle];
+    vc.delegate = self;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - crop delegate
+
+- (void)imageCropViewControllerDidCancel {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imageCropViewControllerDidFinishCrop:(UIImage *)cropImage {
+    if (self.finishCropBlock) {
+        self.finishCropBlock(cropImage);
+    }
 }
 
 #pragma mark - bar delegate
 
 - (void)imagePickerBottomBarDidClickSureButton {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerViewController:didFinished: isSelectedOriginalImage:)]) {
-        [self.delegate imagePickerViewController:self didFinished:self.selectedPhotoItems isSelectedOriginalImage:_isSelectedOriginalImage];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerViewController:didFinishPickingPhotos:sourceAssets:isSelectedOriginalImage:)]) {
+        [self.delegate imagePickerViewController:self didFinishPickingPhotos:nil sourceAssets:self.selectedPhotoItems isSelectedOriginalImage:_isSelectedOriginalImage];
     }
 }
 

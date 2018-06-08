@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C020000F20C8EA8F000F54B4 /* CircleProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = C020000E20C8EA8F000F54B4 /* CircleProgressView.m */; };
+		C020001520C90854000F54B4 /* ImageCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C020001420C90854000F54B4 /* ImageCropViewController.m */; };
 		C084AD7B20C114C500FE3C43 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C084AD7A20C114C500FE3C43 /* AppDelegate.m */; };
 		C084AD8120C114C500FE3C43 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C084AD7F20C114C500FE3C43 /* Main.storyboard */; };
 		C084AD8320C114C500FE3C43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C084AD8220C114C500FE3C43 /* Assets.xcassets */; };
@@ -23,6 +24,8 @@
 		C084ADAB20C114EC00FE3C43 /* PhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C084AD9F20C114EC00FE3C43 /* PhotoCell.m */; };
 		C084ADAC20C114EC00FE3C43 /* PhotoAlbumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C084ADA020C114EC00FE3C43 /* PhotoAlbumCell.m */; };
 		C084ADB420C11C7000FE3C43 /* SelectedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C084ADB320C11C7000FE3C43 /* SelectedCell.m */; };
+		C09C058520C9175300A2AA34 /* ImageCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = C09C058420C9175300A2AA34 /* ImageCropView.m */; };
+		C09C058B20CA332F00A2AA34 /* ImageCropBottomBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C09C058A20CA332F00A2AA34 /* ImageCropBottomBar.m */; };
 		C0E3C3F220C67AE100222801 /* ImagePreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E3C3F120C67AE100222801 /* ImagePreViewController.m */; };
 		C0E3C3F520C67C9E00222801 /* ImagePreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E3C3F420C67C9E00222801 /* ImagePreviewCell.m */; };
 /* End PBXBuildFile section */
@@ -30,6 +33,8 @@
 /* Begin PBXFileReference section */
 		C020000D20C8EA8F000F54B4 /* CircleProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircleProgressView.h; sourceTree = "<group>"; };
 		C020000E20C8EA8F000F54B4 /* CircleProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleProgressView.m; sourceTree = "<group>"; };
+		C020001320C90854000F54B4 /* ImageCropViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCropViewController.h; sourceTree = "<group>"; };
+		C020001420C90854000F54B4 /* ImageCropViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageCropViewController.m; sourceTree = "<group>"; };
 		C084AD7620C114C500FE3C43 /* ImagePickerViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImagePickerViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C084AD7920C114C500FE3C43 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C084AD7A20C114C500FE3C43 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -58,6 +63,11 @@
 		C084ADA220C114EC00FE3C43 /* PhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoAlbum.h; sourceTree = "<group>"; };
 		C084ADB220C11C7000FE3C43 /* SelectedCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectedCell.h; sourceTree = "<group>"; };
 		C084ADB320C11C7000FE3C43 /* SelectedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectedCell.m; sourceTree = "<group>"; };
+		C09C058320C9175300A2AA34 /* ImageCropView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCropView.h; sourceTree = "<group>"; };
+		C09C058420C9175300A2AA34 /* ImageCropView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageCropView.m; sourceTree = "<group>"; };
+		C09C058620C9202600A2AA34 /* ImageCropHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCropHeader.h; sourceTree = "<group>"; };
+		C09C058920CA332F00A2AA34 /* ImageCropBottomBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCropBottomBar.h; sourceTree = "<group>"; };
+		C09C058A20CA332F00A2AA34 /* ImageCropBottomBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageCropBottomBar.m; sourceTree = "<group>"; };
 		C0E3C3F020C67AE100222801 /* ImagePreViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImagePreViewController.h; sourceTree = "<group>"; };
 		C0E3C3F120C67AE100222801 /* ImagePreViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImagePreViewController.m; sourceTree = "<group>"; };
 		C0E3C3F320C67C9E00222801 /* ImagePreviewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImagePreviewCell.h; sourceTree = "<group>"; };
@@ -132,6 +142,9 @@
 				C084ADA120C114EC00FE3C43 /* PhotoAlbumsViewController.h */,
 				C0E3C3F020C67AE100222801 /* ImagePreViewController.h */,
 				C0E3C3F120C67AE100222801 /* ImagePreViewController.m */,
+				C020001320C90854000F54B4 /* ImageCropViewController.h */,
+				C020001420C90854000F54B4 /* ImageCropViewController.m */,
+				C09C058620C9202600A2AA34 /* ImageCropHeader.h */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -147,6 +160,10 @@
 				C084ADA020C114EC00FE3C43 /* PhotoAlbumCell.m */,
 				C0E3C3F320C67C9E00222801 /* ImagePreviewCell.h */,
 				C0E3C3F420C67C9E00222801 /* ImagePreviewCell.m */,
+				C09C058320C9175300A2AA34 /* ImageCropView.h */,
+				C09C058420C9175300A2AA34 /* ImageCropView.m */,
+				C09C058920CA332F00A2AA34 /* ImageCropBottomBar.h */,
+				C09C058A20CA332F00A2AA34 /* ImageCropBottomBar.m */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -242,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C09C058B20CA332F00A2AA34 /* ImageCropBottomBar.m in Sources */,
 				C084ADA420C114EC00FE3C43 /* ViewController.m in Sources */,
 				C084ADAC20C114EC00FE3C43 /* PhotoAlbumCell.m in Sources */,
 				C084ADA620C114EC00FE3C43 /* PhotoHelper.m in Sources */,
@@ -251,7 +269,9 @@
 				C0E3C3F220C67AE100222801 /* ImagePreViewController.m in Sources */,
 				C0E3C3F520C67C9E00222801 /* ImagePreviewCell.m in Sources */,
 				C084ADA520C114EC00FE3C43 /* ImagePickerViewController.m in Sources */,
+				C09C058520C9175300A2AA34 /* ImageCropView.m in Sources */,
 				C084ADA920C114EC00FE3C43 /* ImagePickerBottomBar.m in Sources */,
+				C020001520C90854000F54B4 /* ImageCropViewController.m in Sources */,
 				C084ADAB20C114EC00FE3C43 /* PhotoCell.m in Sources */,
 				C084ADB420C11C7000FE3C43 /* SelectedCell.m in Sources */,
 				C084AD7B20C114C500FE3C43 /* AppDelegate.m in Sources */,

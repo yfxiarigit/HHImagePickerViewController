@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 
 @class ImagePickerViewController, PhotoAlbum, PhotoItem;
 @protocol ImagePickerViewControllerDelegate<NSObject>
 
+@optional
 ///选中回调
-- (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinished:(NSArray<PhotoItem *> *)photos isSelectedOriginalImage:(BOOL)isSelectedOriginalImage;
+- (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray<PhotoItem *> *)sourceAssets isSelectedOriginalImage:(BOOL)isSelectedOriginalImage;
 
 ///取消选择
 - (void)imagePickerViewControllerDidCanceled:(ImagePickerViewController *)imagePickerViewController;
@@ -35,5 +37,6 @@
 
 /// 允许拍摄
 @property (nonatomic, assign) BOOL allowTakePicture;
+@property (nonatomic, copy) void(^finishCropBlock)(UIImage *image);
 
 @end

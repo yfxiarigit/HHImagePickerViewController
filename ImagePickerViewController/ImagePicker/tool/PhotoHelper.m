@@ -121,7 +121,7 @@
                                                    contentMode:PHImageContentModeAspectFill
                                                                            options:options
                                                                      resultHandler:^(UIImage *result, NSDictionary *info) {
-        NSLog(@"%@", info[PHImageResultIsInCloudKey]);
+        //NSLog(@"%@", info[PHImageResultIsInCloudKey]);
         BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
         if (downloadFinined && result) {
             //result = [PhotoHelper fixOrientation:result];//这种方式不会设置scale。

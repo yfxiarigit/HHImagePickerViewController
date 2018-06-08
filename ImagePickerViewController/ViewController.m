@@ -43,8 +43,8 @@
 }
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     SelectedCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"SelectedCell" forIndexPath:indexPath];
-    PhotoItem *item = self.dataArray[indexPath.row];
-    cell.item = item;
+    UIImage *image = self.dataArray[indexPath.row];
+    cell.image = image;
     return cell;
 }
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
@@ -53,7 +53,7 @@
 
 #pragma mark - imagePicker delegate
 
-- (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinished:(NSArray<PhotoItem *> *)photos isSelectedOriginalImage:(BOOL)isSelectedOriginalImage {
+- (void)imagePickerViewController:(ImagePickerViewController *)imagePickerViewController didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray<PhotoItem *> *)sourceAssets isSelectedOriginalImage:(BOOL)isSelectedOriginalImage {
     self.dataArray = nil;
     [self.dataArray addObjectsFromArray:photos];
     [self.collectionView reloadData];
@@ -95,8 +95,15 @@
     _imagePickerViewController = [[ImagePickerViewController alloc] init];
     _imagePickerViewController.delegate = self;
     _imagePickerViewController.photoAlbum = [PhotoHelper getTheAllPhotoAlbum];
+    __weak __typeof(&*_imagePickerViewController)imagePickerView = _imagePickerViewController;
+    __weak __typeof(&*self)weakSelf = self;
+    _imagePickerViewController.finishCropBlock = ^(UIImage *image) {
+        [weakSelf.dataArray addObject:image];
+        [weakSelf.collectionView reloadData];
+        [imagePickerView dismissViewControllerAnimated:YES completion:nil];
+    };
     vc.imagePickerViewController = _imagePickerViewController;
-    _imagePickerViewController.selectedPhotoItems = self.dataArray;
+//    _imagePickerViewController.selectedPhotoItems = self.dataArray;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     nav.viewControllers = @[vc, _imagePickerViewController];
     [self.navigationController presentViewController:nav animated:YES completion:nil];

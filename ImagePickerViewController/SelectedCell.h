@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class PhotoItem;
 @interface SelectedCell : UICollectionViewCell
-@property (nonatomic, strong) PhotoItem *item;
-@property (nonatomic, assign) int32_t imageRequestID;
+@property (nonatomic, strong) UIImage *image;
 @end

@@ -46,6 +46,7 @@
         int32_t imageRequestID = [PhotoHelper requestPhotoWithPHAsset:photoItem.phAsset imageSize:CGSizeMake(375 / 4.0, 375 / 4.0) completion:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
             if ([photoItem.phAsset.localIdentifier isEqualToString:self.localIdentifier]) {
                 self.photoView.image = photo;
+                self.photoItem.thumbnail = photo;
             }
         } progressHandler:nil networkAccessAllowed:YES];
         self.imageRequestID = imageRequestID;

@@ -13,7 +13,6 @@
 
 @interface ImagePreviewCell()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, strong) UIScrollView *scrollView;
-@property (nonatomic, strong) UIView *containorView;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) CircleProgressView *circleProgressView;
 @end
@@ -112,6 +111,7 @@
                 self.imageView.image = photo;
                 //需要自己计算contentSize，因为scrollView根据内容自适应contentSize不准确
                 self.scrollView.contentSize = CGSizeMake(self.imageView.bounds.size.width, self.imageView.bounds.size.height);
+                self.circleProgressView.hidden = YES;
             }
         } progressHandler:^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
             if (progress >= 1) {
