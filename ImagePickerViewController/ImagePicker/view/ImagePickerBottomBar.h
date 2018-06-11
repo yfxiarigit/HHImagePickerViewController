@@ -10,7 +10,11 @@
 
 @class ImagePickerBottomBar;
 @protocol ImagePickerBottomBarDelegate<NSObject>
+
+///完成
 - (void)imagePickerBottomBarDidClickSureButton;
+
+///选择原图
 - (void)imagePickerBottomBar:(ImagePickerBottomBar *)bar didClickOriginalButton:(BOOL)isSelected;
 - (void)imagePickerBottomBarDidClickPreviewButton;
 @end

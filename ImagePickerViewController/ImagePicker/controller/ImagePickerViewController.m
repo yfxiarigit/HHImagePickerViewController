@@ -14,23 +14,34 @@
 #import "PhotoItem.h"
 #import "PhotoAlbum.h"
 #import <Photos/Photos.h>
+#import "PhotoHelper.h"
+#import "PhotoSelectedManager.h"
+#import "ADUploadLoadingView.h"
 
 @interface ImagePickerViewController ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ImagePickerBottomBarDelegate, ImageCropViewControllerDelegate>
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) NSMutableArray *dataArray;
 @property (nonatomic, strong) ImagePickerBottomBar *bottomBar;
+@property (nonatomic, assign) ImagePickerStyle style;
 @end
 
 @implementation ImagePickerViewController {
-    NSMutableArray<PhotoItem *> * _selectedPhotoItems;
     BOOL _isSelectedOriginalImage;
+}
+
+- (instancetype)initWithStyle:(ImagePickerStyle)style {
+    if (self = [super init]) {
+        _style = style;
+    }
+    return self;
 }
 
 - (instancetype)init {
     self = [super init];
-    _maxAllowSelectedPhotoCount = 1;
     _allowSelectedOriginalImage = NO;
     _isSelectedOriginalImage = NO;
+    _allowPreview = NO;
+    _allowTakePicture = NO;
     return self;
 }
 
@@ -41,7 +52,9 @@
     self.view.backgroundColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
     [self.view addSubview:self.collectionView];
-    [self.view addSubview:self.bottomBar];
+    if (self.style == ImagePickerStyleMutiSelect) {
+        [self.view addSubview:self.bottomBar];
+    }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -51,10 +64,12 @@
         bottomArea = 34;
     }
     self.collectionView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    UIEdgeInsets inset = self.collectionView.contentInset;
-    inset.bottom = bottomArea + 44;
-    self.collectionView.contentInset = inset;
-    _bottomBar.frame = CGRectMake(0, self.view.bounds.size.height - bottomArea - 44, _collectionView.bounds.size.width, 44);
+    if (self.style == ImagePickerStyleMutiSelect) {
+        UIEdgeInsets inset = self.collectionView.contentInset;
+        inset.bottom = bottomArea + 44;
+        self.collectionView.contentInset = inset;
+        _bottomBar.frame = CGRectMake(0, self.view.bounds.size.height - bottomArea - 44, _collectionView.bounds.size.width, 44);
+    }
 }
 
 #pragma mark - collectionView delegate
@@ -66,12 +81,15 @@
     PhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"PhotoCell" forIndexPath:indexPath];
     PhotoItem *item = self.dataArray[indexPath.row];
     cell.photoItem = item;
-    __weak __typeof(&*self)weakSelf = self;
+    cell.allowSelected = self.style == ImagePickerStyleMutiSelect ? YES : NO;
     cell.didClickSelectButtonBlock = ^(BOOL isSelected) {
         if (isSelected) {
-            [weakSelf.selectedPhotoItems addObject:item];
+            [ADUploadLoadingView show];
+            [PhotoSelectedManager addPhotoItem:item resultHandler:^(UIImage *photo, NSDictionary *info) {
+                [ADUploadLoadingView hide];
+            } progressHandler:nil];
         }else {
-            [weakSelf.selectedPhotoItems removeObject:item];
+            [PhotoSelectedManager removePhotoItem:item];
         }
     };
     return cell;
@@ -82,17 +100,30 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-//    [cell seletedPhoto:!item.isSelected];
-//    if (item.isSelected) {
-//        [self.selectedPhotoItems addObject:item];
-//    }else {
-//        [self.selectedPhotoItems removeObject:item];
-//    }
     
-    PhotoItem *item = self.dataArray[indexPath.row];
-    ImageCropViewController *vc = [[ImageCropViewController alloc] initWithImage:item.thumbnail cropRect:CGRectMake(0.5 *([UIScreen mainScreen].bounds.size.width - 300), 0.5 *([UIScreen mainScreen].bounds.size.height - 300), 300, 300) imageCropStyle:ImageCropStyleCircle];
-    vc.delegate = self;
-    [self.navigationController pushViewController:vc animated:YES];
+    if (self.style == ImagePickerStyleCrop) {//裁剪图片
+        PhotoItem *item = self.dataArray[indexPath.row];
+        [ADUploadLoadingView show];
+        [PhotoHelper requestPreviewPhotoWithAsset:item.phAsset resultHandler:^(UIImage *photo, NSDictionary *info, BOOL isDegraded) {
+            if (!isDegraded) {
+                [ADUploadLoadingView hide];
+                ImageCropViewController *vc = [[ImageCropViewController alloc] initWithImage:photo cropRect:CGRectMake(0.5 *([UIScreen mainScreen].bounds.size.width - 300), 0.5 *([UIScreen mainScreen].bounds.size.height - 300), 300, 300) imageCropStyle:ImageCropStyleCircle];
+                vc.delegate = self;
+                [self.navigationController pushViewController:vc animated:YES];
+            }
+            
+        } progressHandler:nil networkAccessAllowed:YES];
+    }
+    
+    if (self.style == ImagePickerStyleSingleSelect) {
+        [ADUploadLoadingView show];
+        PhotoItem *item = self.dataArray[indexPath.row];
+        [PhotoSelectedManager addPhotoItem:item resultHandler:^(UIImage *photo, NSDictionary *info) {
+            [ADUploadLoadingView hide];
+            [self finish];
+        } progressHandler:nil];
+    }
+    
 }
 
 #pragma mark - crop delegate
@@ -110,8 +141,15 @@
 #pragma mark - bar delegate
 
 - (void)imagePickerBottomBarDidClickSureButton {
+    [self finish];
+}
+
+- (void)finish {
     if (self.delegate && [self.delegate respondsToSelector:@selector(imagePickerViewController:didFinishPickingPhotos:sourceAssets:isSelectedOriginalImage:)]) {
-        [self.delegate imagePickerViewController:self didFinishPickingPhotos:nil sourceAssets:self.selectedPhotoItems isSelectedOriginalImage:_isSelectedOriginalImage];
+        [self.delegate imagePickerViewController:self didFinishPickingPhotos:[PhotoSelectedManager shareInstance].selectedImages sourceAssets:[PhotoSelectedManager shareInstance].selectedPhotoItems isSelectedOriginalImage:_isSelectedOriginalImage];
+    }
+    if (self.style != ImagePickerStyleMutiSelect) {
+        [PhotoSelectedManager removeAllPhotoItems];
     }
 }
 
@@ -120,9 +158,9 @@
 }
 
 - (void)imagePickerBottomBarDidClickPreviewButton {
-    if (self.selectedPhotoItems.count) {
+    if ([PhotoSelectedManager shareInstance].selectedPhotoItems.count) {
         ImagePreViewController *preview = [[ImagePreViewController alloc] init];
-        preview.dataArray = self.selectedPhotoItems;
+        preview.dataArray = [PhotoSelectedManager shareInstance].selectedPhotoItems;
         [self.navigationController pushViewController:preview animated:YES];
     }
 }
@@ -135,9 +173,9 @@
 
 #pragma mark - getter
 
-- (void)setAllowSelectedOriginalImage:(BOOL)allowSelectedOriginalImage {
-    _allowSelectedOriginalImage = allowSelectedOriginalImage;
-    self.bottomBar.showOriginalButton = _allowSelectedOriginalImage;
+- (void)setMaxAllowSelectedPhotoCount:(NSInteger)maxAllowSelectedPhotoCount {
+    _maxAllowSelectedPhotoCount = maxAllowSelectedPhotoCount;
+    [PhotoSelectedManager shareInstance].maxSelectedImages = maxAllowSelectedPhotoCount;
 }
 
 - (void)setPhotoAlbum:(PhotoAlbum *)photoAlbum {
@@ -149,18 +187,12 @@
         [self.dataArray addObjectsFromArray:imageArray];
         [self.collectionView reloadData];
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.selectedPhotoItems.count) {
-                NSMutableArray *arr = [NSMutableArray array];
-                for (PhotoItem *item in self.selectedPhotoItems) {
-                    [arr addObject:item.phAsset.localIdentifier];
-                }
-                [self.selectedPhotoItems removeAllObjects];
+            if ([PhotoSelectedManager shareInstance].selectedIocalIdentifiers.count && imageArray.count) {
                 NSInteger index = 0;
                 for (PhotoItem *item in self.dataArray) {
-                    if ([arr containsObject:item.phAsset.localIdentifier]) {
+                    if ([[PhotoSelectedManager shareInstance].selectedIocalIdentifiers containsObject:item.phAsset.localIdentifier]) {
                         item.selected = YES;
                         index = [self.dataArray indexOfObject:item];
-                        [self.selectedPhotoItems addObject:item];
                     }
                 }
                 [self.collectionView reloadData];
@@ -197,13 +229,6 @@
         _dataArray = [NSMutableArray array];
     }
     return _dataArray;
-}
-
-- (NSMutableArray<PhotoItem *> *)selectedPhotoItems {
-    if (!_selectedPhotoItems) {
-        _selectedPhotoItems = [NSMutableArray array];
-    }
-    return _selectedPhotoItems;
 }
 
 - (ImagePickerBottomBar *)bottomBar {

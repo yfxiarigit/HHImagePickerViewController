@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
+#import "ImageCropHeader.h"
 
 @class ImagePickerViewController, PhotoAlbum, PhotoItem;
 @protocol ImagePickerViewControllerDelegate<NSObject>
@@ -22,21 +23,25 @@
 
 @interface ImagePickerViewController : UIViewController
 
+- (instancetype)initWithStyle:(ImagePickerStyle)style;
+
 @property (nonatomic, strong) PhotoAlbum *photoAlbum;
 
-/// 最大允许选中的照片数量,默认是1
+/// 最大允许选中的照片数量,默认是3
 @property (nonatomic, assign) NSInteger maxAllowSelectedPhotoCount;
 
-/// 默认选中的照片
-@property (nonatomic, strong) NSMutableArray<PhotoItem *> *selectedPhotoItems;
-
 @property (nonatomic, weak) id<ImagePickerViewControllerDelegate> delegate;
+
+/// 允许预览
+@property (nonatomic, assign, getter=isAllowPreview) BOOL allowPreview;
 
 /// 默认为NO;
 @property (nonatomic, assign, getter=isAllowSelectedOriginalImage) BOOL allowSelectedOriginalImage;
 
-/// 允许拍摄
-@property (nonatomic, assign) BOOL allowTakePicture;
+/// 裁剪回调
 @property (nonatomic, copy) void(^finishCropBlock)(UIImage *image);
+
+/// 允许拍摄,暂未做
+@property (nonatomic, assign) BOOL allowTakePicture;
 
 @end

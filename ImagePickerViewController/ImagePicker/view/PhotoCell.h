@@ -11,6 +11,7 @@
 @class PhotoItem;
 @interface PhotoCell : UICollectionViewCell
 @property (nonatomic, strong) PhotoItem *photoItem;
+@property (nonatomic, assign, getter=isAllowSelectd) BOOL allowSelected;
 @property (nonatomic, copy) void(^didClickSelectButtonBlock)(BOOL isSelected);
 - (void)seletedPhoto:(BOOL)selected;
 @end

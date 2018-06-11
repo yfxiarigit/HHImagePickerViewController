@@ -9,6 +9,7 @@
 #import "PhotoCell.h"
 #import "PhotoItem.h"
 #import "PhotoHelper.h"
+#import "PhotoSelectedManager.h"
 
 @interface PhotoCell()
 @property (nonatomic, strong) UIImageView *photoView;
@@ -53,8 +54,17 @@
     }
 }
 
+- (void)setAllowSelected:(BOOL)allowSelected {
+    _allowSelected = allowSelected;
+    self.selectButton.hidden = !allowSelected;
+    self.coverView.hidden = !allowSelected;
+}
+
 #pragma mark - event
 - (void)clickSelectButton:(UIButton *)sender {
+    if (![PhotoSelectedManager checkIsAllowSelected] && !sender.selected) {
+        return;
+    }
     sender.selected = !sender.selected;
     [self seletedPhoto:sender.selected];
     if (self.didClickSelectButtonBlock) {

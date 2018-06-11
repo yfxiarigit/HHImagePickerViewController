@@ -125,7 +125,8 @@
         BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
         if (downloadFinined && result) {
             //result = [PhotoHelper fixOrientation:result];//这种方式不会设置scale。
-            result = [UIImage imageWithCGImage:result.CGImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+            //scale设置为1，是参考系统相册的
+            result = [UIImage imageWithCGImage:result.CGImage scale:1 orientation:UIImageOrientationUp];
             if (completion) completion(result,info,[[info objectForKey:PHImageResultIsDegradedKey] boolValue]);
         }
     }];
@@ -149,7 +150,8 @@
     };
     int32_t imageRequestID = [[PHImageManager defaultManager] requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
         if (imageData) {
-            UIImage *resultImage = [UIImage imageWithData:imageData scale:[UIScreen mainScreen].scale];
+            //scale = 1，参考系统相册返回的也是1
+            UIImage *resultImage = [UIImage imageWithData:imageData scale:1];
 //            resultImage = [PhotoHelper fixOrientation:resultImage];
             if (completion) completion(resultImage, info, imageData.length / 1024);
         }

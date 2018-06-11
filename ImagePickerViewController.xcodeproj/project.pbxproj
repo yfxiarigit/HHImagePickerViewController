@@ -26,6 +26,8 @@
 		C084ADB420C11C7000FE3C43 /* SelectedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C084ADB320C11C7000FE3C43 /* SelectedCell.m */; };
 		C09C058520C9175300A2AA34 /* ImageCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = C09C058420C9175300A2AA34 /* ImageCropView.m */; };
 		C09C058B20CA332F00A2AA34 /* ImageCropBottomBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C09C058A20CA332F00A2AA34 /* ImageCropBottomBar.m */; };
+		C0AA184120CE41D40070A4A5 /* PhotoSelectedManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AA184020CE41D40070A4A5 /* PhotoSelectedManager.m */; };
+		C0AA184420CE54980070A4A5 /* ADUploadLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AA184320CE54980070A4A5 /* ADUploadLoadingView.m */; };
 		C0E3C3F220C67AE100222801 /* ImagePreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E3C3F120C67AE100222801 /* ImagePreViewController.m */; };
 		C0E3C3F520C67C9E00222801 /* ImagePreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E3C3F420C67C9E00222801 /* ImagePreviewCell.m */; };
 /* End PBXBuildFile section */
@@ -68,6 +70,10 @@
 		C09C058620C9202600A2AA34 /* ImageCropHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCropHeader.h; sourceTree = "<group>"; };
 		C09C058920CA332F00A2AA34 /* ImageCropBottomBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCropBottomBar.h; sourceTree = "<group>"; };
 		C09C058A20CA332F00A2AA34 /* ImageCropBottomBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageCropBottomBar.m; sourceTree = "<group>"; };
+		C0AA183F20CE41D40070A4A5 /* PhotoSelectedManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoSelectedManager.h; sourceTree = "<group>"; };
+		C0AA184020CE41D40070A4A5 /* PhotoSelectedManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoSelectedManager.m; sourceTree = "<group>"; };
+		C0AA184220CE54980070A4A5 /* ADUploadLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADUploadLoadingView.h; sourceTree = "<group>"; };
+		C0AA184320CE54980070A4A5 /* ADUploadLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADUploadLoadingView.m; sourceTree = "<group>"; };
 		C0E3C3F020C67AE100222801 /* ImagePreViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImagePreViewController.h; sourceTree = "<group>"; };
 		C0E3C3F120C67AE100222801 /* ImagePreViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImagePreViewController.m; sourceTree = "<group>"; };
 		C0E3C3F320C67C9E00222801 /* ImagePreviewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImagePreviewCell.h; sourceTree = "<group>"; };
@@ -108,6 +114,8 @@
 				C084AD7A20C114C500FE3C43 /* AppDelegate.m */,
 				C020000D20C8EA8F000F54B4 /* CircleProgressView.h */,
 				C020000E20C8EA8F000F54B4 /* CircleProgressView.m */,
+				C0AA184220CE54980070A4A5 /* ADUploadLoadingView.h */,
+				C0AA184320CE54980070A4A5 /* ADUploadLoadingView.m */,
 				C084AD9120C114EC00FE3C43 /* ImagePicker */,
 				C084AD8F20C114EC00FE3C43 /* ViewController.h */,
 				C084AD9020C114EC00FE3C43 /* ViewController.m */,
@@ -184,6 +192,8 @@
 			children = (
 				C084AD9D20C114EC00FE3C43 /* PhotoHelper.h */,
 				C084AD9320C114EC00FE3C43 /* PhotoHelper.m */,
+				C0AA183F20CE41D40070A4A5 /* PhotoSelectedManager.h */,
+				C0AA184020CE41D40070A4A5 /* PhotoSelectedManager.m */,
 			);
 			path = tool;
 			sourceTree = "<group>";
@@ -259,6 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0AA184120CE41D40070A4A5 /* PhotoSelectedManager.m in Sources */,
 				C09C058B20CA332F00A2AA34 /* ImageCropBottomBar.m in Sources */,
 				C084ADA420C114EC00FE3C43 /* ViewController.m in Sources */,
 				C084ADAC20C114EC00FE3C43 /* PhotoAlbumCell.m in Sources */,
@@ -273,6 +284,7 @@
 				C084ADA920C114EC00FE3C43 /* ImagePickerBottomBar.m in Sources */,
 				C020001520C90854000F54B4 /* ImageCropViewController.m in Sources */,
 				C084ADAB20C114EC00FE3C43 /* PhotoCell.m in Sources */,
+				C0AA184420CE54980070A4A5 /* ADUploadLoadingView.m in Sources */,
 				C084ADB420C11C7000FE3C43 /* SelectedCell.m in Sources */,
 				C084AD7B20C114C500FE3C43 /* AppDelegate.m in Sources */,
 				C084ADA720C114EC00FE3C43 /* PhotoAlbumsViewController.m in Sources */,
@@ -410,6 +422,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z3RNG48AMQ;
 				INFOPLIST_FILE = ImagePickerViewController/Info.plist;
@@ -417,6 +430,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.huiyoujia.ImagePickerViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -425,6 +439,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Z3RNG48AMQ;
 				INFOPLIST_FILE = ImagePickerViewController/Info.plist;
@@ -432,6 +447,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.huiyoujia.ImagePickerViewController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

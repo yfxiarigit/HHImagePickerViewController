@@ -15,3 +15,10 @@ typedef NS_ENUM(NSUInteger, ImageCropStyle) {
     ///矩形裁剪
     ImageCropStyleSquare,
 };
+
+
+typedef NS_ENUM(NSUInteger, ImagePickerStyle) {
+    ImagePickerStyleCrop,
+    ImagePickerStyleSingleSelect,
+    ImagePickerStyleMutiSelect,
+};

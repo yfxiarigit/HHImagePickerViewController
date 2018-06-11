@@ -13,10 +13,12 @@
 #import "SelectedCell.h"
 #import "PhotoItem.h"
 #import "CircleProgressView.h"
+#import "PhotoSelectedManager.h"
 
 @interface ViewController ()<ImagePickerViewControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UIButton *selectPhotoButton;
+@property (nonatomic, strong) UIButton *cancelAllSelectedImagesButton;
 @property (nonatomic, strong) NSMutableArray *dataArray;
 @end
 
@@ -29,6 +31,7 @@
     [super viewDidLoad];
     [self.view addSubview:self.collectionView];
     [self.view addSubview:self.selectPhotoButton];
+    
 }
 
 - (void)viewDidLayoutSubviews {
@@ -90,9 +93,15 @@
     }
 }
 
+- (void)cancelAllSelectedImagesButtonClick {
+    [self.dataArray removeAllObjects];
+    [PhotoSelectedManager removeAllPhotoItems];
+    [self.collectionView reloadData];
+}
+
 - (void)gotoImagePickerController {
     PhotoAlbumsViewController *vc = [[PhotoAlbumsViewController alloc] init];
-    _imagePickerViewController = [[ImagePickerViewController alloc] init];
+    _imagePickerViewController = [[ImagePickerViewController alloc] initWithStyle:ImagePickerStyleMutiSelect];
     _imagePickerViewController.delegate = self;
     _imagePickerViewController.photoAlbum = [PhotoHelper getTheAllPhotoAlbum];
     __weak __typeof(&*_imagePickerViewController)imagePickerView = _imagePickerViewController;
@@ -103,7 +112,6 @@
         [imagePickerView dismissViewControllerAnimated:YES completion:nil];
     };
     vc.imagePickerViewController = _imagePickerViewController;
-//    _imagePickerViewController.selectedPhotoItems = self.dataArray;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     nav.viewControllers = @[vc, _imagePickerViewController];
     [self.navigationController presentViewController:nav animated:YES completion:nil];
@@ -135,6 +143,16 @@
         [_selectPhotoButton setTitle:@"选择图片" forState:UIControlStateNormal];
         [_selectPhotoButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [_selectPhotoButton addTarget:self action:@selector(selectPhotoButtonClick) forControlEvents:UIControlEventTouchDown];
+    }
+    return _selectPhotoButton;
+}
+
+- (UIButton *)cancelAllSelectedImagesButton {
+    if (!_cancelAllSelectedImagesButton) {
+        _cancelAllSelectedImagesButton = [[UIButton alloc] init];
+        [_cancelAllSelectedImagesButton setTitle:@"删除所有所有的图片" forState:UIControlStateNormal];
+        [_cancelAllSelectedImagesButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [_cancelAllSelectedImagesButton addTarget:self action:@selector(selectPhotoButtonClick) forControlEvents:UIControlEventTouchDown];
     }
     return _selectPhotoButton;
 }
